@@ -1,9 +1,9 @@
-using HotelIndustri.Domain.Exceptions;
-using HotelIndustri.Domain.ValueObjects;
+using Mia_Web.Domain.Exceptions;
+using Mia_Web.Domain.ValueObjects;
 using NUnit.Framework;
 using Shouldly;
 
-namespace HotelIndustri.Domain.UnitTests.ValueObjects;
+namespace Mia_Web.Domain.UnitTests.ValueObjects;
 
 public class ColourTests
 {

@@ -1,10 +1,10 @@
-﻿using HotelIndustri.Application.Common.Interfaces;
-using HotelIndustri.Application.Common.Models;
-using HotelIndustri.Application.Common.Security;
-using HotelIndustri.Domain.Enums;
-using HotelIndustri.Domain.ValueObjects;
+﻿using Mia_Web.Application.Common.Interfaces;
+using Mia_Web.Application.Common.Models;
+using Mia_Web.Application.Common.Security;
+using Mia_Web.Domain.Enums;
+using Mia_Web.Domain.ValueObjects;
 
-namespace HotelIndustri.Application.TodoLists.Queries.GetTodos;
+namespace Mia_Web.Application.TodoLists.Queries.GetTodos;
 
 [Authorize]
 public record GetTodosQuery : IRequest<TodosVm>;

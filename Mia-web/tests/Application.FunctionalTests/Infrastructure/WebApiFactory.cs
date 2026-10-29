@@ -1,18 +1,18 @@
-using HotelIndustri.Application.Common.Interfaces;
+using Mia_Web.Application.Common.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace HotelIndustri.Application.FunctionalTests.Infrastructure;
+namespace Mia_Web.Application.FunctionalTests.Infrastructure;
 
 public class WebApiFactory(string connectionString) : WebApplicationFactory<Program>
 {
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder
-            .UseSetting("ConnectionStrings:HotelIndustriDb", connectionString);
+            .UseSetting("ConnectionStrings:Mia_WebDb", connectionString);
 
         builder.ConfigureTestServices(services =>
         {

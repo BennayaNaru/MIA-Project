@@ -1,8 +1,8 @@
 ﻿using System.Security.Claims;
 
-using HotelIndustri.Application.Common.Interfaces;
+using Mia_Web.Application.Common.Interfaces;
 
-namespace HotelIndustri.Web.Services;
+namespace Mia_Web.Web.Services;
 
 public class CurrentUser : IUser
 {

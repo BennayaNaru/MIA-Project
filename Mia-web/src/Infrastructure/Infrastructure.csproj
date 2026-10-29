@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <RootNamespace>HotelIndustri.Infrastructure</RootNamespace>
-    <AssemblyName>HotelIndustri.Infrastructure</AssemblyName>
+    <RootNamespace>Mia_Web.Infrastructure</RootNamespace>
+    <AssemblyName>Mia_Web.Infrastructure</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

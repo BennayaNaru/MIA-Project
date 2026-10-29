@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace HotelIndustri.Web.Infrastructure;
+namespace Mia_Web.Web.Infrastructure;
 
 public static class MethodInfoExtensions
 {

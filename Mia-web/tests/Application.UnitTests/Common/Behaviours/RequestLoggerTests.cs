@@ -1,11 +1,11 @@
-﻿using HotelIndustri.Application.Common.Behaviours;
-using HotelIndustri.Application.Common.Interfaces;
-using HotelIndustri.Application.TodoItems.Commands.CreateTodoItem;
+﻿using Mia_Web.Application.Common.Behaviours;
+using Mia_Web.Application.Common.Interfaces;
+using Mia_Web.Application.TodoItems.Commands.CreateTodoItem;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 
-namespace HotelIndustri.Application.UnitTests.Common.Behaviours;
+namespace Mia_Web.Application.UnitTests.Common.Behaviours;
 
 public class RequestLoggerTests
 {

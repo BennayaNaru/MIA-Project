@@ -1,6 +1,6 @@
-using HotelIndustri.Shared;
+using Mia_Web.Shared;
 
-namespace HotelIndustri.TestAppHost;
+namespace Mia_Web.TestAppHost;
 
 public class Program
 {

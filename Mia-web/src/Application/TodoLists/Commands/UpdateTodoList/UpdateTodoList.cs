@@ -1,7 +1,7 @@
-using HotelIndustri.Application.Common.Interfaces;
-using HotelIndustri.Domain.ValueObjects;
+using Mia_Web.Application.Common.Interfaces;
+using Mia_Web.Domain.ValueObjects;
 
-namespace HotelIndustri.Application.TodoLists.Commands.UpdateTodoList;
+namespace Mia_Web.Application.TodoLists.Commands.UpdateTodoList;
 
 public record UpdateTodoListCommand : IRequest
 {

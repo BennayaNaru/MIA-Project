@@ -1,4 +1,4 @@
-using HotelIndustri.Infrastructure.Data;
+using Mia_Web.Infrastructure.Data;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);

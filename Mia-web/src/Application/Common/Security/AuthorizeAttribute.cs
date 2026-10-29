@@ -1,4 +1,4 @@
-﻿namespace HotelIndustri.Application.Common.Security;
+﻿namespace Mia_Web.Application.Common.Security;
 
 /// <summary>
 /// Specifies the class this attribute is applied to requires authorization.

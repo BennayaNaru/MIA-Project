@@ -1,7 +1,7 @@
-using HotelIndustri.Application.WeatherForecasts.Queries.GetWeatherForecasts;
+using Mia_Web.Application.WeatherForecasts.Queries.GetWeatherForecasts;
 using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace HotelIndustri.Web.Endpoints;
+namespace Mia_Web.Web.Endpoints;
 
 public class WeatherForecasts : IEndpointGroup
 {

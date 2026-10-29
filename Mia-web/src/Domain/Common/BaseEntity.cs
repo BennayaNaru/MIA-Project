@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace HotelIndustri.Domain.Common;
+namespace Mia_Web.Domain.Common;
 
 public abstract class BaseEntity
 {

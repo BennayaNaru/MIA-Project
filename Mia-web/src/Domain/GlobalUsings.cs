@@ -1,6 +1,6 @@
-﻿global using HotelIndustri.Domain.Common;
-global using HotelIndustri.Domain.Entities;
-global using HotelIndustri.Domain.Enums;
-global using HotelIndustri.Domain.Events;
-global using HotelIndustri.Domain.Exceptions;
-global using HotelIndustri.Domain.ValueObjects;
+﻿global using Mia_Web.Domain.Common;
+global using Mia_Web.Domain.Entities;
+global using Mia_Web.Domain.Enums;
+global using Mia_Web.Domain.Events;
+global using Mia_Web.Domain.Exceptions;
+global using Mia_Web.Domain.ValueObjects;

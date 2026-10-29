@@ -1,8 +1,8 @@
-﻿using HotelIndustri.Application.Common.Interfaces;
+﻿using Mia_Web.Application.Common.Interfaces;
 using MediatR.Pipeline;
 using Microsoft.Extensions.Logging;
 
-namespace HotelIndustri.Application.Common.Behaviours;
+namespace Mia_Web.Application.Common.Behaviours;
 
 public class LoggingBehaviour<TRequest> : IRequestPreProcessor<TRequest>
     where TRequest : notnull
@@ -29,7 +29,7 @@ public class LoggingBehaviour<TRequest> : IRequestPreProcessor<TRequest>
             userName = await _identityService.GetUserNameAsync(userId);
         }
 
-        _logger.LogInformation("HotelIndustri Request: {Name} {@UserId} {@UserName} {@Request}",
+        _logger.LogInformation("Mia_Web Request: {Name} {@UserId} {@UserName} {@Request}",
             requestName, userId, userName, request);
     }
 }

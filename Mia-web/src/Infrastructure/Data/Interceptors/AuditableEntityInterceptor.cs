@@ -1,10 +1,10 @@
-﻿using HotelIndustri.Application.Common.Interfaces;
-using HotelIndustri.Domain.Common;
+﻿using Mia_Web.Application.Common.Interfaces;
+using Mia_Web.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace HotelIndustri.Infrastructure.Data.Interceptors;
+namespace Mia_Web.Infrastructure.Data.Interceptors;
 
 public class AuditableEntityInterceptor : SaveChangesInterceptor
 {

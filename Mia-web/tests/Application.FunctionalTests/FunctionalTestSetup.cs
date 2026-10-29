@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 
-namespace HotelIndustri.Application.FunctionalTests;
+namespace Mia_Web.Application.FunctionalTests;
 
 [SetUpFixture]
 public class FunctionalTestSetup

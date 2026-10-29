@@ -1,2 +1,2 @@
 ﻿global using Ardalis.GuardClauses;
-global using HotelIndustri.Shared;
+global using Mia_Web.Shared;

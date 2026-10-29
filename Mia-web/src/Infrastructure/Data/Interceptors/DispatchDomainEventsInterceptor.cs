@@ -1,9 +1,9 @@
-﻿using HotelIndustri.Domain.Common;
+﻿using Mia_Web.Domain.Common;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace HotelIndustri.Infrastructure.Data.Interceptors;
+namespace Mia_Web.Infrastructure.Data.Interceptors;
 
 public class DispatchDomainEventsInterceptor : SaveChangesInterceptor
 {

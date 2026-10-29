@@ -1,6 +1,6 @@
-﻿using HotelIndustri.Application.Common.Interfaces;
+﻿using Mia_Web.Application.Common.Interfaces;
 
-namespace HotelIndustri.Application.TodoLists.Commands.UpdateTodoList;
+namespace Mia_Web.Application.TodoLists.Commands.UpdateTodoList;
 
 public class UpdateTodoListCommandValidator : AbstractValidator<UpdateTodoListCommand>
 {

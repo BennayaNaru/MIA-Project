@@ -1,7 +1,7 @@
-﻿using HotelIndustri.Application.Common.Interfaces;
-using HotelIndustri.Domain.Entities;
+﻿using Mia_Web.Application.Common.Interfaces;
+using Mia_Web.Domain.Entities;
 
-namespace HotelIndustri.Application.TodoItems.Commands.CreateTodoItem;
+namespace Mia_Web.Application.TodoItems.Commands.CreateTodoItem;
 
 public record CreateTodoItemCommand : IRequest<int>
 {

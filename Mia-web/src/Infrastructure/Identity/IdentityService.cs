@@ -1,10 +1,10 @@
-using HotelIndustri.Application.Common.Interfaces;
-using HotelIndustri.Application.Common.Models;
+using Mia_Web.Application.Common.Interfaces;
+using Mia_Web.Application.Common.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace HotelIndustri.Infrastructure.Identity;
+namespace Mia_Web.Infrastructure.Identity;
 
 public class IdentityService : IIdentityService
 {

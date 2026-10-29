@@ -1,4 +1,4 @@
-﻿namespace HotelIndustri.Domain.Common;
+﻿namespace Mia_Web.Domain.Common;
 
 public abstract class BaseAuditableEntity : BaseEntity
 {

@@ -1,9 +1,9 @@
-﻿using HotelIndustri.Application.TodoItems.Commands.CreateTodoItem;
-using HotelIndustri.Application.TodoItems.Commands.DeleteTodoItem;
-using HotelIndustri.Application.TodoLists.Commands.CreateTodoList;
-using HotelIndustri.Domain.Entities;
+﻿using Mia_Web.Application.TodoItems.Commands.CreateTodoItem;
+using Mia_Web.Application.TodoItems.Commands.DeleteTodoItem;
+using Mia_Web.Application.TodoLists.Commands.CreateTodoList;
+using Mia_Web.Domain.Entities;
 
-namespace HotelIndustri.Application.FunctionalTests.TodoItems.Commands;
+namespace Mia_Web.Application.FunctionalTests.TodoItems.Commands;
 
 public class DeleteTodoItemTests : TestBase
 {

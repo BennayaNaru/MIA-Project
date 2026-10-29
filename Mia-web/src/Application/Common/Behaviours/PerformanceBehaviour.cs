@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
-using HotelIndustri.Application.Common.Interfaces;
+using Mia_Web.Application.Common.Interfaces;
 using Microsoft.Extensions.Logging;
 
-namespace HotelIndustri.Application.Common.Behaviours;
+namespace Mia_Web.Application.Common.Behaviours;
 
 public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull
@@ -45,7 +45,7 @@ public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequ
                 userName = await _identityService.GetUserNameAsync(userId);
             }
 
-            _logger.LogWarning("HotelIndustri Long Running Request: {Name} ({ElapsedMilliseconds} milliseconds) {@UserId} {@UserName} {@Request}",
+            _logger.LogWarning("Mia_Web Long Running Request: {Name} ({ElapsedMilliseconds} milliseconds) {@UserId} {@UserName} {@Request}",
                 requestName, elapsedMilliseconds, userId, userName, request);
         }
 

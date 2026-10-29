@@ -1,4 +1,4 @@
-namespace HotelIndustri.Web.AcceptanceTests.StepDefinitions;
+namespace Mia_Web.Web.AcceptanceTests.StepDefinitions;
 
 [Binding]
 public sealed class HomeStepDefinitions(HomePage homePage)

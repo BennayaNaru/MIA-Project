@@ -1,4 +1,4 @@
-namespace HotelIndustri.Web.AcceptanceTests.Pages;
+namespace Mia_Web.Web.AcceptanceTests.Pages;
 
 public class WeatherPage(IPage page) : BasePage(page)
 {

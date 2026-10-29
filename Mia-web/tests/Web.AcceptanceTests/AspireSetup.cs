@@ -1,6 +1,6 @@
 using Aspire.Hosting;
 
-namespace HotelIndustri.Web.AcceptanceTests;
+namespace Mia_Web.Web.AcceptanceTests;
 
 [SetUpFixture]
 public class AspireSetup

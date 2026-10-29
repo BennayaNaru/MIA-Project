@@ -1,8 +1,8 @@
-﻿using HotelIndustri.Application.TodoLists.Queries.GetTodos;
-using HotelIndustri.Domain.Entities;
-using HotelIndustri.Domain.ValueObjects;
+﻿using Mia_Web.Application.TodoLists.Queries.GetTodos;
+using Mia_Web.Domain.Entities;
+using Mia_Web.Domain.ValueObjects;
 
-namespace HotelIndustri.Application.FunctionalTests.TodoLists.Queries;
+namespace Mia_Web.Application.FunctionalTests.TodoLists.Queries;
 
 public class GetTodosTests : TestBase
 {

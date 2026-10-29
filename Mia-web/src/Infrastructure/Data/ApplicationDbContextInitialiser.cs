@@ -1,13 +1,13 @@
-﻿using HotelIndustri.Domain.Constants;
-using HotelIndustri.Domain.Entities;
-using HotelIndustri.Domain.ValueObjects;
-using HotelIndustri.Infrastructure.Identity;
+﻿using Mia_Web.Domain.Constants;
+using Mia_Web.Domain.Entities;
+using Mia_Web.Domain.ValueObjects;
+using Mia_Web.Infrastructure.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace HotelIndustri.Infrastructure.Data;
+namespace Mia_Web.Infrastructure.Data;
 
 public static class InitialiserExtensions
 {

@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <RootNamespace>HotelIndustri.Domain.UnitTests</RootNamespace>
-        <AssemblyName>HotelIndustri.Domain.UnitTests</AssemblyName>
+        <RootNamespace>Mia_Web.Domain.UnitTests</RootNamespace>
+        <AssemblyName>Mia_Web.Domain.UnitTests</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>

@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace HotelIndustri.Web.Infrastructure;
+namespace Mia_Web.Web.Infrastructure;
 
 /// <summary>
 /// Extends <see cref="IEndpointRouteBuilder"/> with convenience overloads used inside

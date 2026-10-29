@@ -1,4 +1,4 @@
-namespace HotelIndustri.Application.FunctionalTests.Infrastructure;
+namespace Mia_Web.Application.FunctionalTests.Infrastructure;
 
 public abstract class TestBase
 {

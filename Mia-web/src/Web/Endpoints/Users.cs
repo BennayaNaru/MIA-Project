@@ -1,9 +1,9 @@
-﻿using HotelIndustri.Infrastructure.Identity;
+﻿using Mia_Web.Infrastructure.Identity;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HotelIndustri.Web.Endpoints;
+namespace Mia_Web.Web.Endpoints;
 
 public class Users : IEndpointGroup
 {

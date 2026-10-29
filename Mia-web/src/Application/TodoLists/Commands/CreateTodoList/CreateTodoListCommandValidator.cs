@@ -1,6 +1,6 @@
-﻿using HotelIndustri.Application.Common.Interfaces;
+﻿using Mia_Web.Application.Common.Interfaces;
 
-namespace HotelIndustri.Application.TodoLists.Commands.CreateTodoList;
+namespace Mia_Web.Application.TodoLists.Commands.CreateTodoList;
 
 public class CreateTodoListCommandValidator : AbstractValidator<CreateTodoListCommand>
 {

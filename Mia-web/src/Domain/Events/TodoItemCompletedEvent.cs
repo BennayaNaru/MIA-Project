@@ -1,4 +1,4 @@
-﻿namespace HotelIndustri.Domain.Events;
+﻿namespace Mia_Web.Domain.Events;
 
 public class TodoItemCompletedEvent : BaseEvent
 {

@@ -1,4 +1,4 @@
-﻿namespace HotelIndustri.Application.Common.Interfaces;
+﻿namespace Mia_Web.Application.Common.Interfaces;
 
 public interface IUser
 {

@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <RootNamespace>HotelIndustri.Application.FunctionalTests</RootNamespace>
-        <AssemblyName>HotelIndustri.Application.FunctionalTests</AssemblyName>
+        <RootNamespace>Mia_Web.Application.FunctionalTests</RootNamespace>
+        <AssemblyName>Mia_Web.Application.FunctionalTests</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>

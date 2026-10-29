@@ -2,7 +2,7 @@ using Microsoft.Data.Sqlite;
 using Respawn;
 using System.Data.Common;
 
-namespace HotelIndustri.Application.FunctionalTests.Infrastructure;
+namespace Mia_Web.Application.FunctionalTests.Infrastructure;
 
 internal sealed class DatabaseResetter : IAsyncDisposable
 {

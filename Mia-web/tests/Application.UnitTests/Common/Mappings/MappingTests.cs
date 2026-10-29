@@ -1,12 +1,12 @@
 using System.Runtime.CompilerServices;
 using AutoMapper;
-using HotelIndustri.Application.Common.Interfaces;
-using HotelIndustri.Application.TodoLists.Queries.GetTodos;
-using HotelIndustri.Domain.Entities;
+using Mia_Web.Application.Common.Interfaces;
+using Mia_Web.Application.TodoLists.Queries.GetTodos;
+using Mia_Web.Domain.Entities;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 
-namespace HotelIndustri.Application.UnitTests.Common.Mappings;
+namespace Mia_Web.Application.UnitTests.Common.Mappings;
 
 public class MappingTests
 {

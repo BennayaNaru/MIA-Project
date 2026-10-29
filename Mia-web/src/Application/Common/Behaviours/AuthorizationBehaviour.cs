@@ -1,9 +1,9 @@
 ﻿using System.Reflection;
-using HotelIndustri.Application.Common.Exceptions;
-using HotelIndustri.Application.Common.Interfaces;
-using HotelIndustri.Application.Common.Security;
+using Mia_Web.Application.Common.Exceptions;
+using Mia_Web.Application.Common.Interfaces;
+using Mia_Web.Application.Common.Security;
 
-namespace HotelIndustri.Application.Common.Behaviours;
+namespace Mia_Web.Application.Common.Behaviours;
 
 public class AuthorizationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> 
     where TRequest : notnull

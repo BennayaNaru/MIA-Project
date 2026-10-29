@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <RootNamespace>HotelIndustri.TestAppHost</RootNamespace>
-    <AssemblyName>HotelIndustri.TestAppHost</AssemblyName>
+    <RootNamespace>Mia_Web.TestAppHost</RootNamespace>
+    <AssemblyName>Mia_Web.TestAppHost</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,6 +1,6 @@
-﻿using HotelIndustri.Domain.Entities;
+﻿using Mia_Web.Domain.Entities;
 
-namespace HotelIndustri.Application.Common.Models;
+namespace Mia_Web.Application.Common.Models;
 
 public class LookupDto
 {

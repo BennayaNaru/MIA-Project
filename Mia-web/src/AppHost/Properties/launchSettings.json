@@ -5,25 +5,25 @@
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "applicationUrl": "https://hotelindustri.dev.localhost:17149;http://hotelindustri.dev.localhost:15167",
+      "applicationUrl": "https://mia_web.dev.localhost:17282;http://mia_web.dev.localhost:15174",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DOTNET_ENVIRONMENT": "Development",
-        "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "https://localhost:21150",
-        "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "https://localhost:22114"
+        "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "https://localhost:21081",
+        "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "https://localhost:22222"
       }
     },
     "http": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "applicationUrl": "http://hotelindustri.dev.localhost:15167",
+      "applicationUrl": "http://mia_web.dev.localhost:15174",
       "environmentVariables": {
         "ASPIRE_ALLOW_UNSECURED_TRANSPORT": "true",
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DOTNET_ENVIRONMENT": "Development",
-        "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "http://localhost:19084",
-        "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "http://localhost:20063"
+        "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "http://localhost:19199",
+        "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "http://localhost:20008"
       }
     },
     "manifest": {

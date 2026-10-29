@@ -1,4 +1,4 @@
-﻿namespace HotelIndustri.Domain.Exceptions;
+﻿namespace Mia_Web.Domain.Exceptions;
 
 public class UnsupportedColourException : Exception
 {

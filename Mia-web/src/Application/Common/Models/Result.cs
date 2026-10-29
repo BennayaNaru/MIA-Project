@@ -1,4 +1,4 @@
-﻿namespace HotelIndustri.Application.Common.Models;
+﻿namespace Mia_Web.Application.Common.Models;
 
 public class Result
 {

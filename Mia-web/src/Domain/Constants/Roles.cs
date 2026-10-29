@@ -1,4 +1,4 @@
-﻿namespace HotelIndustri.Domain.Constants;
+﻿namespace Mia_Web.Domain.Constants;
 
 public abstract class Roles
 {

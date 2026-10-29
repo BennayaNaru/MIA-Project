@@ -1,8 +1,8 @@
-using HotelIndustri.Application.Common.Exceptions;
+using Mia_Web.Application.Common.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HotelIndustri.Web.Infrastructure;
+namespace Mia_Web.Web.Infrastructure;
 
 /// <summary>
 /// Converts well-known application exceptions into RFC 9110-compliant <see cref="ProblemDetails"/> responses,

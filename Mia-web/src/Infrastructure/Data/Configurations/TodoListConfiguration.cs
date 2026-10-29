@@ -1,8 +1,8 @@
-﻿using HotelIndustri.Domain.Entities;
+﻿using Mia_Web.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace HotelIndustri.Infrastructure.Data.Configurations;
+namespace Mia_Web.Infrastructure.Data.Configurations;
 
 public class TodoListConfiguration : IEntityTypeConfiguration<TodoList>
 {

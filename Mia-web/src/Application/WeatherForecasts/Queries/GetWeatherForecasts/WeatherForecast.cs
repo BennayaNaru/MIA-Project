@@ -1,4 +1,4 @@
-﻿namespace HotelIndustri.Application.WeatherForecasts.Queries.GetWeatherForecasts;
+﻿namespace Mia_Web.Application.WeatherForecasts.Queries.GetWeatherForecasts;
 
 public class WeatherForecast
 {

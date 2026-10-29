@@ -1,4 +1,4 @@
-namespace HotelIndustri.Domain.ValueObjects;
+namespace Mia_Web.Domain.ValueObjects;
 
 public class Colour(string code) : ValueObject
 {

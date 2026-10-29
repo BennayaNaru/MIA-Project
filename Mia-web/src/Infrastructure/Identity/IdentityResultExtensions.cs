@@ -1,7 +1,7 @@
-﻿using HotelIndustri.Application.Common.Models;
+﻿using Mia_Web.Application.Common.Models;
 using Microsoft.AspNetCore.Identity;
 
-namespace HotelIndustri.Infrastructure.Identity;
+namespace Mia_Web.Infrastructure.Identity;
 
 public static class IdentityResultExtensions
 {

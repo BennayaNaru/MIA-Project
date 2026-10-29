@@ -1,4 +1,4 @@
-namespace HotelIndustri.Web.Infrastructure;
+namespace Mia_Web.Web.Infrastructure;
 
 /// <summary>
 /// Defines a group of related Minimal API endpoints.

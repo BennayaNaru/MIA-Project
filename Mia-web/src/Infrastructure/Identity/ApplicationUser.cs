@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace HotelIndustri.Infrastructure.Identity;
+namespace Mia_Web.Infrastructure.Identity;
 
 public class ApplicationUser : IdentityUser
 {

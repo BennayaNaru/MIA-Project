@@ -1,6 +1,6 @@
-﻿using HotelIndustri.Application.Common.Interfaces;
+﻿using Mia_Web.Application.Common.Interfaces;
 
-namespace HotelIndustri.Application.TodoItems.Commands.DeleteTodoItem;
+namespace Mia_Web.Application.TodoItems.Commands.DeleteTodoItem;
 
 public record DeleteTodoItemCommand(int Id) : IRequest;
 

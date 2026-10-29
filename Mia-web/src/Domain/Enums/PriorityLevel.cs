@@ -1,4 +1,4 @@
-﻿namespace HotelIndustri.Domain.Enums;
+﻿namespace Mia_Web.Domain.Enums;
 
 public enum PriorityLevel
 {

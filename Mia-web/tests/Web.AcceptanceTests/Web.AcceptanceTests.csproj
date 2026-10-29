@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <RootNamespace>HotelIndustri.Web.AcceptanceTests</RootNamespace>
-        <AssemblyName>HotelIndustri.Web.AcceptanceTests</AssemblyName>
+        <RootNamespace>Mia_Web.Web.AcceptanceTests</RootNamespace>
+        <AssemblyName>Mia_Web.Web.AcceptanceTests</AssemblyName>
         <ReqnrollUseIntermediateOutputPathForCodeBehind>true</ReqnrollUseIntermediateOutputPathForCodeBehind>
     </PropertyGroup>
 

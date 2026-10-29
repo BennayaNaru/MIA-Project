@@ -1,6 +1,6 @@
-﻿using HotelIndustri.Domain.Entities;
+﻿using Mia_Web.Domain.Entities;
 
-namespace HotelIndustri.Application.TodoLists.Queries.GetTodos;
+namespace Mia_Web.Application.TodoLists.Queries.GetTodos;
 
 public class TodoListDto
 {

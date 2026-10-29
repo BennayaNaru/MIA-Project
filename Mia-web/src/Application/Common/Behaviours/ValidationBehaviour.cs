@@ -1,6 +1,6 @@
-﻿using ValidationException = HotelIndustri.Application.Common.Exceptions.ValidationException;
+﻿using ValidationException = Mia_Web.Application.Common.Exceptions.ValidationException;
 
-namespace HotelIndustri.Application.Common.Behaviours;
+namespace Mia_Web.Application.Common.Behaviours;
 
 public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull

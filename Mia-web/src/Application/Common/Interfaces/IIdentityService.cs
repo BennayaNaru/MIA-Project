@@ -1,6 +1,6 @@
-﻿using HotelIndustri.Application.Common.Models;
+﻿using Mia_Web.Application.Common.Models;
 
-namespace HotelIndustri.Application.Common.Interfaces;
+namespace Mia_Web.Application.Common.Interfaces;
 
 public interface IIdentityService
 {

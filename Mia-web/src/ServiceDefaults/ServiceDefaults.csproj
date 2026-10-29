@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <IsAspireSharedProject>true</IsAspireSharedProject>
-    <RootNamespace>HotelIndustri.ServiceDefaults</RootNamespace>
-    <AssemblyName>HotelIndustri.ServiceDefaults</AssemblyName>
+    <RootNamespace>Mia_Web.ServiceDefaults</RootNamespace>
+    <AssemblyName>Mia_Web.ServiceDefaults</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

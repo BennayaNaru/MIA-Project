@@ -1,4 +1,4 @@
-﻿namespace HotelIndustri.Application.TodoItems.Commands.UpdateTodoItem;
+﻿namespace Mia_Web.Application.TodoItems.Commands.UpdateTodoItem;
 
 public class UpdateTodoItemCommandValidator : AbstractValidator<UpdateTodoItemCommand>
 {

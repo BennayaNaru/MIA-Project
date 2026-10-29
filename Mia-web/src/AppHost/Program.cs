@@ -1,4 +1,4 @@
-using HotelIndustri.Shared;
+using Mia_Web.Shared;
 
 var builder = DistributedApplication.CreateBuilder(args);
 

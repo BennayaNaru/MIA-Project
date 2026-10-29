@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <RootNamespace>HotelIndustri.Infrastructure.IntegrationTests</RootNamespace>
-        <AssemblyName>HotelIndustri.Infrastructure.IntegrationTests</AssemblyName>
+        <RootNamespace>Mia_Web.Infrastructure.IntegrationTests</RootNamespace>
+        <AssemblyName>Mia_Web.Infrastructure.IntegrationTests</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>

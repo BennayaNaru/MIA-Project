@@ -1,8 +1,8 @@
-﻿using HotelIndustri.Application.Common.Interfaces;
-using HotelIndustri.Domain.Entities;
-using HotelIndustri.Domain.ValueObjects;
+﻿using Mia_Web.Application.Common.Interfaces;
+using Mia_Web.Domain.Entities;
+using Mia_Web.Domain.ValueObjects;
 
-namespace HotelIndustri.Application.TodoLists.Commands.CreateTodoList;
+namespace Mia_Web.Application.TodoLists.Commands.CreateTodoList;
 
 public record CreateTodoListCommand : IRequest<int>
 {

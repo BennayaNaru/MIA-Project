@@ -1,10 +1,10 @@
-using HotelIndustri.Application.TodoLists.Commands.CreateTodoList;
-using HotelIndustri.Application.TodoLists.Commands.DeleteTodoList;
-using HotelIndustri.Application.TodoLists.Commands.UpdateTodoList;
-using HotelIndustri.Application.TodoLists.Queries.GetTodos;
+using Mia_Web.Application.TodoLists.Commands.CreateTodoList;
+using Mia_Web.Application.TodoLists.Commands.DeleteTodoList;
+using Mia_Web.Application.TodoLists.Commands.UpdateTodoList;
+using Mia_Web.Application.TodoLists.Queries.GetTodos;
 using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace HotelIndustri.Web.Endpoints;
+namespace Mia_Web.Web.Endpoints;
 
 public class TodoLists : IEndpointGroup
 {

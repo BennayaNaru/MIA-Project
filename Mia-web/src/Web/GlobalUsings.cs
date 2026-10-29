@@ -1,3 +1,3 @@
 global using Ardalis.GuardClauses;
-global using HotelIndustri.Web.Infrastructure;
+global using Mia_Web.Web.Infrastructure;
 global using MediatR;

@@ -1,4 +1,4 @@
-namespace HotelIndustri.Web.AcceptanceTests.Pages;
+namespace Mia_Web.Web.AcceptanceTests.Pages;
 
 public abstract class BasePage(IPage page)
 {

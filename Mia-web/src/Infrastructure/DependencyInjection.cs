@@ -1,7 +1,7 @@
-﻿using HotelIndustri.Application.Common.Interfaces;
-using HotelIndustri.Infrastructure.Data;
-using HotelIndustri.Infrastructure.Data.Interceptors;
-using HotelIndustri.Infrastructure.Identity;
+﻿using Mia_Web.Application.Common.Interfaces;
+using Mia_Web.Infrastructure.Data;
+using Mia_Web.Infrastructure.Data.Interceptors;
+using Mia_Web.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;

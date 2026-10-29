@@ -1,9 +1,9 @@
-﻿using HotelIndustri.Application.Common.Exceptions;
+﻿using Mia_Web.Application.Common.Exceptions;
 using FluentValidation.Results;
 using NUnit.Framework;
 using Shouldly;
 
-namespace HotelIndustri.Application.UnitTests.Common.Exceptions;
+namespace Mia_Web.Application.UnitTests.Common.Exceptions;
 
 public class ValidationExceptionTests
 {

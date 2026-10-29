@@ -1,7 +1,7 @@
-﻿using HotelIndustri.Domain.Events;
+﻿using Mia_Web.Domain.Events;
 using Microsoft.Extensions.Logging;
 
-namespace HotelIndustri.Application.TodoItems.EventHandlers;
+namespace Mia_Web.Application.TodoItems.EventHandlers;
 
 public class LogTodoItemCompleted : INotificationHandler<TodoItemCompletedEvent>
 {
@@ -14,7 +14,7 @@ public class LogTodoItemCompleted : INotificationHandler<TodoItemCompletedEvent>
 
     public Task Handle(TodoItemCompletedEvent notification, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("HotelIndustri Domain Event: {DomainEvent}", notification.GetType().Name);
+        _logger.LogInformation("Mia_Web Domain Event: {DomainEvent}", notification.GetType().Name);
 
         return Task.CompletedTask;
     }

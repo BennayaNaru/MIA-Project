@@ -1,6 +1,6 @@
 ﻿using FluentValidation.Results;
 
-namespace HotelIndustri.Application.Common.Exceptions;
+namespace Mia_Web.Application.Common.Exceptions;
 
 public class ValidationException : Exception
 {

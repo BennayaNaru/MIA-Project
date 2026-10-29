@@ -1,7 +1,7 @@
 using Azure.Identity;
-using HotelIndustri.Application.Common.Interfaces;
-using HotelIndustri.Infrastructure.Data;
-using HotelIndustri.Web.Services;
+using Mia_Web.Application.Common.Interfaces;
+using Mia_Web.Infrastructure.Data;
+using Mia_Web.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Microsoft.Extensions.DependencyInjection;

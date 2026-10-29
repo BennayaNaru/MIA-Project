@@ -1,6 +1,6 @@
-﻿using HotelIndustri.Application.Common.Models;
+﻿using Mia_Web.Application.Common.Models;
 
-namespace HotelIndustri.Application.TodoLists.Queries.GetTodos;
+namespace Mia_Web.Application.TodoLists.Queries.GetTodos;
 
 public class TodosVm
 {

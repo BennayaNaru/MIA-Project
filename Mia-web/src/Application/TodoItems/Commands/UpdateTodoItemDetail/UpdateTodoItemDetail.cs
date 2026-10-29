@@ -1,7 +1,7 @@
-﻿using HotelIndustri.Application.Common.Interfaces;
-using HotelIndustri.Domain.Enums;
+﻿using Mia_Web.Application.Common.Interfaces;
+using Mia_Web.Domain.Enums;
 
-namespace HotelIndustri.Application.TodoItems.Commands.UpdateTodoItemDetail;
+namespace Mia_Web.Application.TodoItems.Commands.UpdateTodoItemDetail;
 
 public record UpdateTodoItemDetailCommand : IRequest
 {

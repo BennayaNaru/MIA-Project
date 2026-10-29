@@ -1,10 +1,10 @@
-using HotelIndustri.Application.TodoItems.Commands.CreateTodoItem;
-using HotelIndustri.Application.TodoItems.Commands.DeleteTodoItem;
-using HotelIndustri.Application.TodoItems.Commands.UpdateTodoItem;
-using HotelIndustri.Application.TodoItems.Commands.UpdateTodoItemDetail;
+using Mia_Web.Application.TodoItems.Commands.CreateTodoItem;
+using Mia_Web.Application.TodoItems.Commands.DeleteTodoItem;
+using Mia_Web.Application.TodoItems.Commands.UpdateTodoItem;
+using Mia_Web.Application.TodoItems.Commands.UpdateTodoItemDetail;
 using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace HotelIndustri.Web.Endpoints;
+namespace Mia_Web.Web.Endpoints;
 
 public class TodoItems : IEndpointGroup
 {

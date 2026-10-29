@@ -1,12 +1,12 @@
-using HotelIndustri.Domain.Constants;
-using HotelIndustri.Infrastructure.Data;
-using HotelIndustri.Infrastructure.Identity;
+using Mia_Web.Domain.Constants;
+using Mia_Web.Infrastructure.Data;
+using Mia_Web.Infrastructure.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace HotelIndustri.Application.FunctionalTests.Infrastructure;
+namespace Mia_Web.Application.FunctionalTests.Infrastructure;
 
 public static class TestApp
 {

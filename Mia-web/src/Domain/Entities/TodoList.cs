@@ -1,4 +1,4 @@
-﻿namespace HotelIndustri.Domain.Entities;
+﻿namespace Mia_Web.Domain.Entities;
 
 public class TodoList : BaseAuditableEntity
 {

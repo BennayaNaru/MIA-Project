@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using HotelIndustri.Application.Common.Behaviours;
+using Mia_Web.Application.Common.Behaviours;
 using Microsoft.Extensions.Hosting;
 
 namespace Microsoft.Extensions.DependencyInjection;

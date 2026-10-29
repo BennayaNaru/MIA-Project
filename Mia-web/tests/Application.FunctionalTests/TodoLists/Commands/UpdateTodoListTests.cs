@@ -1,9 +1,9 @@
-﻿using HotelIndustri.Application.Common.Exceptions;
-using HotelIndustri.Application.TodoLists.Commands.CreateTodoList;
-using HotelIndustri.Application.TodoLists.Commands.UpdateTodoList;
-using HotelIndustri.Domain.Entities;
+﻿using Mia_Web.Application.Common.Exceptions;
+using Mia_Web.Application.TodoLists.Commands.CreateTodoList;
+using Mia_Web.Application.TodoLists.Commands.UpdateTodoList;
+using Mia_Web.Domain.Entities;
 
-namespace HotelIndustri.Application.FunctionalTests.TodoLists.Commands;
+namespace Mia_Web.Application.FunctionalTests.TodoLists.Commands;
 
 public class UpdateTodoListTests : TestBase
 {
