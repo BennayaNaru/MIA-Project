@@ -19,7 +19,7 @@ Aplikasi web yang membantu orang tua mencari sekolah dan membandingkan 2–3 sek
 1. Clone repository:
 
    ```bash
-   git clone https://github.com/<username>/<nama-repo>.git
+   git clone https://github.com/BennayaNaru/MIA-Project/tree/frontend
    cd <nama-repo>
    ```
 
