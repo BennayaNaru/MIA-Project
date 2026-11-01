@@ -37,10 +37,10 @@ app.MapScalarApiReference();
 
 app.UseExceptionHandler(options => { });
 
-app.Map("/", () => Results.Redirect("/scalar"));
 
 app.MapDefaultEndpoints();
 app.MapEndpoints(typeof(Program).Assembly);
 
+app.MapFallbackToFile("index.html");
 
 app.Run();

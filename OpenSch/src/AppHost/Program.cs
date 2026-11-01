@@ -21,5 +21,14 @@ var web = builder.AddProject<Projects.Web>(Services.WebApi)
         url.Url = "/scalar";
     });
 
+if (builder.ExecutionContext.IsRunMode)
+{
+    builder.AddJavaScriptApp(Services.WebFrontend, "./../Web/ClientApp")
+        .WithRunScript("start")
+        .WithReference(web)
+        .WaitFor(web)
+        .WithHttpEndpoint(env: "PORT")
+        .WithExternalHttpEndpoints();
+}
 
 builder.Build().Run();
