@@ -34,13 +34,6 @@ Aplikasi web yang membantu orang tua mencari sekolah dan membandingkan 2–3 sek
 
    Buka http://localhost:5173
 
-3. (Opsional) Jalankan **backend** di terminal lain dari root repository:
-
-   ```bash
-   dotnet run --project src/Web
-   ```
-
-   Backend berjalan di http://localhost:5295. Database SQLite dibuat otomatis, tidak perlu menginstal database apa pun.
 
 ## Progress Saat Ini
 
