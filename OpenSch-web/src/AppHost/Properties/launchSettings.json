@@ -5,25 +5,25 @@
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "applicationUrl": "https://opensch.dev.localhost:17210;http://opensch.dev.localhost:15011",
+      "applicationUrl": "https://opensch.dev.localhost:17036;http://opensch.dev.localhost:15168",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DOTNET_ENVIRONMENT": "Development",
-        "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "https://localhost:21209",
-        "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "https://localhost:22110"
+        "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "https://localhost:21258",
+        "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "https://localhost:22172"
       }
     },
     "http": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "applicationUrl": "http://opensch.dev.localhost:15011",
+      "applicationUrl": "http://opensch.dev.localhost:15168",
       "environmentVariables": {
         "ASPIRE_ALLOW_UNSECURED_TRANSPORT": "true",
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DOTNET_ENVIRONMENT": "Development",
-        "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "http://localhost:19259",
-        "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "http://localhost:20038"
+        "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "http://localhost:19007",
+        "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "http://localhost:20040"
       }
     },
     "manifest": {
