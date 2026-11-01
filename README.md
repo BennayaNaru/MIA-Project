@@ -1,4 +1,4 @@
-# OpenSch – Papan Sekolah Terbuka
+# OpenSch. – Papan Sekolah Terbuka
 
 Aplikasi web yang membantu orang tua mencari sekolah dan membandingkan 2–3 sekolah lewat tabel angka dan penjelasan singkat, serta menampilkan peringkat literasi dan numerasi dengan konteks yang jelas. Seluruh data adalah **data demo (sintetis), bukan data resmi**.
 
