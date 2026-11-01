@@ -1,4 +1,4 @@
-# EduRank – Papan Sekolah Terbuka
+# OpenSch – Papan Sekolah Terbuka
 
 Aplikasi web yang membantu orang tua mencari sekolah dan membandingkan 2–3 sekolah lewat tabel angka dan penjelasan singkat, serta menampilkan peringkat literasi dan numerasi dengan konteks yang jelas. Seluruh data adalah **data demo (sintetis), bukan data resmi**.
 
@@ -33,21 +33,13 @@ Aplikasi web yang membantu orang tua mencari sekolah dan membandingkan 2–3 sek
 
    Buka http://localhost:5173
 
-3. (Opsional) Jalankan **backend** di terminal lain dari root repository:
-
-   ```bash
-   dotnet run --project src/Web
-   ```
-
-   Backend berjalan di http://localhost:5295. Database SQLite dibuat otomatis, tidak perlu menginstal database apa pun.
-
 ## Progress Saat Ini
 
 - [x] Landing page (Beranda)
 - [x] Cari Sekolah (filter, tampilan kartu/tabel, modal detail)
 - [x] Keranjang perbandingan dan halaman Bandingkan
 - [x] Tentang Data (metodologi dan batasan data)
-- [ ] Halaman Masuk/Daftar
+- [x] Halaman Masuk/Daftar
 - [ ] Integrasi frontend dengan API backend (`/api/schools`, `/api/compare`, `/api/rankings`)
 - [ ] Halaman Peringkat dan ringkasan otomatis dari backend
 
@@ -57,6 +49,6 @@ Catatan: saat ini halaman frontend memakai data sintetis yang disimpan di `src/W
 
 | Nama | Peran |
 |---|---|
-| <Nama 1> | <Peran> |
-| <Nama 2> | <Peran> |
-| <Nama 3> | <Peran> |
+| <Nathaniel Dennis Yosafat Sidauruk> | <Peran> |
+| <Bennaya Muhammad Caesar> | <Peran> |
+| <Hadi Sumanjaya> | <Peran> |
