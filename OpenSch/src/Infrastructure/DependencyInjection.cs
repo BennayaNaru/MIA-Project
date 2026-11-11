@@ -179,8 +179,7 @@ public static class DependencyInjection
                 Database = string.IsNullOrWhiteSpace(database) ? "postgres" : database,
                 Username = username,
                 Password = password,
-                SslMode = SslMode.Require,
-                TrustServerCertificate = true
+                SslMode = SslMode.Require
             };
 
             if (!string.IsNullOrEmpty(uri.Query))
