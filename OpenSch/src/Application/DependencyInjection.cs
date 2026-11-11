@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using OpenSch.Application.Common.Behaviours;
+using OpenSch.Application.Services;
 using Microsoft.Extensions.Hosting;
 
 namespace Microsoft.Extensions.DependencyInjection;
@@ -12,6 +13,10 @@ public static class DependencyInjection
             cfg.AddMaps(Assembly.GetExecutingAssembly()));
 
         builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
+        // All school reads go through the database; the catalog is seed data only.
+        builder.Services.AddScoped<ISchoolQueryService, SchoolQueryService>();
+        builder.Services.AddScoped<ISchoolImportService, SchoolImportService>();
 
         builder.Services.AddMediatR(cfg => {
             cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());

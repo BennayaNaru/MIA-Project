@@ -4,6 +4,8 @@ import { Navigate } from "react-router-dom";
 import CariSekolahPage from './pages/CariSekolahPage';
 import BandingkanPage from './pages/BandingkanPage';
 import TentangDataPage from './pages/TentangDataPage'
+import AdminImportPage from './pages/AdminImportPage'
+import { ProtectedRoute } from './components/api-authorization/ProtectedRoute'
 
 const AppRoutes = [
   { index: true,
@@ -24,6 +26,15 @@ const AppRoutes = [
 
   { path: '/tentang-data',
      element: <TentangDataPage />
+  },
+
+  {
+  path: '/admin/impor',
+  element: (
+    <ProtectedRoute>
+      <AdminImportPage />
+    </ProtectedRoute>
+  )
   },
 
   {

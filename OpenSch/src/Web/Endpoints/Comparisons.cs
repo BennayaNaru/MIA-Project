@@ -19,47 +19,49 @@ public sealed class Comparisons : IEndpointGroup
     }
 
     [EndpointSummary("Compare two or three schools")]
-    [EndpointDescription("Uses canonical server data to produce a deterministic comparison. Provide 2 or 3 schoolIds.")]
-    public static Results<Ok<DeterministicComparison>, BadRequest<ValidationProblemDetails>> CreateDeterministicComparison(CompareSchoolsRequest request)
+    [EndpointDescription("Uses persisted school data to produce a deterministic comparison. Provide 2 or 3 schoolIds.")]
+    public static async Task<Results<Ok<DeterministicComparison>, BadRequest<ValidationProblemDetails>>> CreateDeterministicComparison(
+        CompareSchoolsRequest request,
+        ISchoolQueryService schoolQuery,
+        CancellationToken cancellationToken)
     {
-        if (!TryResolveSchools(request, out var schools, out var error))
+        var selection = await schoolQuery.ResolveForComparisonAsync(request.SchoolIds, cancellationToken);
+        if (!selection.Succeeded)
         {
-            return TypedResults.BadRequest(error!);
+            return TypedResults.BadRequest(ToValidationProblem(selection.Error!));
         }
 
-        return TypedResults.Ok(new DeterministicComparison(schools, MetricsCalculator.Calculate(schools)));
+        return TypedResults.Ok(new DeterministicComparison(
+            selection.Schools,
+            MetricsCalculator.Calculate(selection.Schools)));
     }
 
     [EndpointSummary("Create an AI school comparison")]
-    [EndpointDescription("Sends a standardized JSON payload built from canonical server data to the configured AI provider. The response always includes an AI accuracy warning.")]
+    [EndpointDescription("Sends a standardized JSON payload built from persisted school data to the configured AI provider. The response always includes an AI accuracy warning.")]
     public static async Task<Results<Ok<AiComparisonResponse>, BadRequest<ValidationProblemDetails>>> CreateAiComparison(
         CompareSchoolsRequest request,
+        ISchoolQueryService schoolQuery,
         IAiComparisonService comparisonService,
         CancellationToken cancellationToken)
     {
-        if (!TryResolveSchools(request, out var schools, out var error))
+        var selection = await schoolQuery.ResolveForComparisonAsync(request.SchoolIds, cancellationToken);
+        if (!selection.Succeeded)
         {
-            return TypedResults.BadRequest(error!);
+            return TypedResults.BadRequest(ToValidationProblem(selection.Error!));
         }
 
-        var result = await comparisonService.CompareAsync(schools, cancellationToken);
-        return TypedResults.Ok(new AiComparisonResponse(result.Source, schools, MetricsCalculator.Calculate(schools), result.Narrative, result.Warnings, result.AnalysisPayload));
+        var result = await comparisonService.CompareAsync(selection.Schools, cancellationToken);
+        return TypedResults.Ok(new AiComparisonResponse(
+            result.Source,
+            selection.Schools,
+            MetricsCalculator.Calculate(selection.Schools),
+            result.Narrative,
+            result.Warnings,
+            result.AnalysisPayload));
     }
 
-    private static bool TryResolveSchools(
-        CompareSchoolsRequest request,
-        out IReadOnlyList<SchoolDto> schools,
-        out ValidationProblemDetails? error)
-    {
-        if (SchoolCatalog.TryResolve(request.SchoolIds, out schools, out var message))
-        {
-            error = null;
-            return true;
-        }
-
-        error = new ValidationProblemDetails(new Dictionary<string, string[]> { ["schoolIds"] = [message!] });
-        return false;
-    }
+    private static ValidationProblemDetails ToValidationProblem(string message) =>
+        new(new Dictionary<string, string[]> { ["schoolIds"] = [message] });
 }
 
 public sealed record CompareSchoolsRequest(IReadOnlyList<string>? SchoolIds);

@@ -215,15 +215,34 @@ namespace OpenSch.Infrastructure.Data.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("jumlah_baris");
 
+                    b.Property<int>("JumlahBerhasil")
+                        .HasColumnType("integer")
+                        .HasColumnName("jumlah_berhasil");
+
+                    b.Property<int>("JumlahGagal")
+                        .HasColumnType("integer")
+                        .HasColumnName("jumlah_gagal");
+
                     b.Property<string>("NamaFile")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)")
                         .HasColumnName("nama_file");
 
+                    b.Property<string>("PenggunaId")
+                        .HasMaxLength(450)
+                        .HasColumnType("character varying(450)")
+                        .HasColumnName("pengguna_id");
+
                     b.Property<string>("Pesan")
                         .HasColumnType("text")
                         .HasColumnName("pesan");
+
+                    b.Property<string>("StatusImpor")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("status_impor");
 
                     b.Property<bool>("Sukses")
                         .HasColumnType("boolean")
@@ -236,6 +255,8 @@ namespace OpenSch.Infrastructure.Data.Migrations
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PenggunaId");
 
                     b.ToTable("impor_data", (string)null);
                 });
@@ -336,6 +357,14 @@ namespace OpenSch.Infrastructure.Data.Migrations
                         .HasColumnName("created_at")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                    b.Property<int?>("JumlahGuru")
+                        .HasColumnType("integer")
+                        .HasColumnName("jumlah_guru");
+
+                    b.Property<int?>("JumlahMurid")
+                        .HasColumnType("integer")
+                        .HasColumnName("jumlah_murid");
+
                     b.Property<string>("KabupatenKota")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -360,9 +389,18 @@ namespace OpenSch.Infrastructure.Data.Migrations
                         .HasColumnType("character varying(255)")
                         .HasColumnName("nama");
 
+                    b.Property<string>("Npsn")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("npsn");
+
                     b.Property<int?>("Peringkat")
                         .HasColumnType("integer")
                         .HasColumnName("peringkat");
+
+                    b.Property<int?>("RuangKelas")
+                        .HasColumnType("integer")
+                        .HasColumnName("ruang_kelas");
 
                     b.Property<decimal?>("SkorKomposit")
                         .HasPrecision(5, 2)
@@ -379,6 +417,15 @@ namespace OpenSch.Infrastructure.Data.Migrations
                         .HasColumnType("numeric(5,2)")
                         .HasColumnName("skor_melek_huruf");
 
+                    b.Property<string>("Status")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("status");
+
+                    b.Property<DateOnly?>("TanggalData")
+                        .HasColumnType("date")
+                        .HasColumnName("tanggal_data");
+
                     b.Property<DateTimeOffset>("UpdatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
@@ -386,6 +433,9 @@ namespace OpenSch.Infrastructure.Data.Migrations
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Npsn")
+                        .IsUnique();
 
                     b.ToTable("sekolah", (string)null);
                 });
@@ -522,6 +572,14 @@ namespace OpenSch.Infrastructure.Data.Migrations
                     b.Navigation("Perbandingan");
 
                     b.Navigation("Sekolah");
+                });
+
+            modelBuilder.Entity("OpenSch.Domain.Entities.ImporData", b =>
+                {
+                    b.HasOne("OpenSch.Infrastructure.Identity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("PenggunaId")
+                        .OnDelete(DeleteBehavior.SetNull);
                 });
 
             modelBuilder.Entity("OpenSch.Domain.Entities.Perbandingan", b =>

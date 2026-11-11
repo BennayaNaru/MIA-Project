@@ -10,5 +10,12 @@
 
   <ItemGroup>
     <NuGetAuditSuppress Include="https://github.com/advisories/GHSA-2m69-gcr7-jv3q" />
+    <!--
+      GHSA-f7vh-h5g3-7jrh affects the Aspire AppHost orchestration packages only
+      (local/dev-time tooling, never shipped to clients). The patched 13.6.5 line pulls
+      newer EF Core / OpenTelemetry transitives, so it is tracked as a follow-up instead
+      of forcing a chain upgrade before the competition build.
+    -->
+    <NuGetAuditSuppress Include="https://github.com/advisories/GHSA-f7vh-h5g3-7jrh" />
   </ItemGroup>
 </Project>

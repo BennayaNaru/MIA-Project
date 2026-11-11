@@ -2,6 +2,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { SITE, NAV_LINKS, REGIONS } from "../../constants/site";
 import Icon from "../common/Icon";
 import { useCompare } from '../../context/CompareContext'
+import { useAuth } from '../api-authorization/AuthContext'
 
 const linkClass = ({ isActive }) =>
   "inline-flex items-center gap-1.5 pb-1 whitespace-nowrap transition-all " +
@@ -12,6 +13,10 @@ const linkClass = ({ isActive }) =>
 export default function Navbar() {
   const navigate = useNavigate();
   const { selectedIds } = useCompare();
+  const { isAdmin } = useAuth();
+  const links = isAdmin
+    ? [...NAV_LINKS, { to: "/admin/impor", label: "Impor Data" }]
+    : NAV_LINKS;
   const pickRegion = (value) =>
     navigate(value ? "/cari?kota=" + encodeURIComponent(value) : "/cari");
 
@@ -31,7 +36,7 @@ export default function Navbar() {
         </Link>
 
         <nav className="hidden md:flex items-center space-x-6 text-sm font-semibold">
-          {NAV_LINKS.map((l) => (
+          {links.map((l) => (
             <NavLink key={l.to} to={l.to} end={l.end} className={linkClass}>
               {l.label}
             </NavLink>
@@ -77,7 +82,7 @@ export default function Navbar() {
       </div>
 
       <nav className="md:hidden flex gap-5 overflow-x-auto px-4 pb-2 text-sm font-semibold">
-        {NAV_LINKS.map((l) => (
+        {links.map((l) => (
           <NavLink key={l.to} to={l.to} end={l.end} className={linkClass}>
             {l.label}
             {l.to === "/bandingkan" && selectedIds.length > 0 && (

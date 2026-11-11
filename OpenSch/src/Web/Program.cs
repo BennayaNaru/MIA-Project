@@ -64,10 +64,21 @@ builder.Services.AddRateLimiter(opts =>
 
 var app = builder.Build();
 
+// The OpenAPI document generator (GetDocument.Insider) boots this assembly at build time
+// with no configuration, so migrations must not run inside that process.
+var isOpenApiDocumentGeneration =
+    System.Reflection.Assembly.GetEntryAssembly()?.GetName().Name == "GetDocument.Insider";
+
+// Apply migrations and seed reference data on startup in every environment so a fresh
+// deployment never starts against an unmigrated or empty database.
+if (!isOpenApiDocumentGeneration)
+{
+    await app.InitialiseDatabaseAsync();
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    await app.InitialiseDatabaseAsync();
     app.MapOpenApi();
     app.MapScalarApiReference();
 }
