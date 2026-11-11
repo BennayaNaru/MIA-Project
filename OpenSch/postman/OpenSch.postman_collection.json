@@ -1,0 +1,222 @@
+{
+  "info": {
+    "name": "OpenSch API",
+    "description": "Requests for the OpenSch API. Start the API on http://localhost:5295, then run Register -> Login -> AI Comparison. Login uses ?useCookies=true so Postman stores the Identity cookie for authenticated requests.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5295"
+    },
+    {
+      "key": "email",
+      "value": "postman@example.com"
+    },
+    {
+      "key": "password",
+      "value": "Postman123!"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. List schools",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/schools",
+        "description": "Returns the canonical 16-school catalog with computed composite scores and ranks."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('status is 200', () => pm.response.to.have.status(200));",
+              "pm.test('catalog contains 16 schools', () => pm.expect(pm.response.json()).to.have.lengthOf(16));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Deterministic comparison",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"schoolIds\": [\"DKI-01\", \"DKI-02\", \"DKI-03\"]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/api/compare",
+        "description": "Compare 2 or 3 school IDs. No login required."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('status is 200', () => pm.response.to.have.status(200));",
+              "pm.test('metrics are returned', () => pm.expect(pm.response.json().metrics).to.be.an('object'));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Register",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/api/Users/register",
+        "description": "Creates a user. If the email already exists, change the collection variable 'email'."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('status is 200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Login (cookie)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/api/Users/login?useCookies=true",
+        "description": "Logs in and stores the ASP.NET Core Identity cookie in Postman's cookie jar. Run this before the AI comparison."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('status is 200', () => pm.response.to.have.status(200));",
+              "pm.test('identity cookie is present', () => pm.cookies.has('.AspNetCore.Identity.Application'));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. AI comparison (authenticated)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"schoolIds\": [\"DKI-01\", \"DKI-02\", \"DKI-03\"]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/api/compare/ai",
+        "description": "Requires the cookie from request 4. The rate limit is 10 requests per minute per user. If AI is not configured, the API returns a deterministic fallback with warnings."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('status is 200', () => pm.response.to.have.status(200));",
+              "pm.test('source is present', () => pm.expect(pm.response.json()).to.have.property('source'));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Logout",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/api/Users/logout",
+        "description": "Clears the Identity cookie."
+      }
+    }
+  ]
+}

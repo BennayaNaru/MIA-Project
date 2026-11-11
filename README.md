@@ -1,4 +1,4 @@
-# OpenSch. – Papan Sekolah Terbuka
+# OpenSch – Papan Sekolah Terbuka
 
 Aplikasi web yang membantu orang tua mencari sekolah dan membandingkan 2–3 sekolah lewat tabel angka dan penjelasan singkat, serta menampilkan peringkat literasi dan numerasi dengan konteks yang jelas. Seluruh data adalah **data demo (sintetis), bukan data resmi**.
 
@@ -20,20 +20,18 @@ Aplikasi web yang membantu orang tua mencari sekolah dan membandingkan 2–3 sek
 
    ```bash
    git clone -b frontend https://github.com/BennayaNaru/MIA-Project.git
-   cd MIA-Project (nama repo)
+   cd <nama-repo>
    ```
 
 2. Jalankan **frontend** (cukup langkah ini untuk melihat seluruh tampilan saat ini):
 
    ```bash
-   cd OpenSch-web/src/Web/ClientApp
+   cd OpenSch/src/Web/ClientApp
    npm install
-   npm install @tailwindcss/forms
    npm run dev
    ```
 
    Buka http://localhost:5173
-
 
 ## Progress Saat Ini
 
@@ -42,14 +40,31 @@ Aplikasi web yang membantu orang tua mencari sekolah dan membandingkan 2–3 sek
 - [x] Keranjang perbandingan dan halaman Bandingkan
 - [x] Tentang Data (metodologi dan batasan data)
 - [x] Halaman Masuk/Daftar
-- [ ] Integrasi frontend dengan API backend (`/api/schools`, `/api/compare`, `/api/rankings`)
+- [x] API katalog dan perbandingan sekolah (`/api/schools`, `/api/compare`)
+- [x] Ringkasan perbandingan AI di `POST /api/compare/ai` dengan payload JSON terstruktur dan fallback deterministik
 - [ ] Halaman Peringkat dan ringkasan otomatis dari backend
 
+Catatan: seluruh data adalah sintetis. Untuk perbandingan AI, browser hanya mengirim ID sekolah; server mengambil metrik kanonis,
+membentuk JSON, dan mengirimkannya ke penyedia AI yang dikonfigurasi. Respons AI selalu harus diperlakukan sebagai bantuan,
+bukan fakta atau rekomendasi akhir.
 
-## Tim Doa Ibu Selamanya
+## Konfigurasi AI (opsional)
 
-| No | Nama |
+Secara default, endpoint AI menggunakan fallback deterministik dan tidak menghubungi penyedia eksternal. Untuk mengaktifkan
+penyedia dengan API yang kompatibel dengan Chat Completions, simpan rahasia di user-secrets atau environment variables - jangan
+menuliskan kunci di `appsettings.json`:
+
+```powershell
+dotnet user-secrets set "AiComparison:Enabled" "true" --project OpenSch/src/Web/Web.csproj
+dotnet user-secrets set "AiComparison:Endpoint" "https://your-provider.example/v1/chat/completions" --project OpenSch/src/Web/Web.csproj
+dotnet user-secrets set "AiComparison:Model" "your-model" --project OpenSch/src/Web/Web.csproj
+dotnet user-secrets set "AiComparison:ApiKey" "your-secret" --project OpenSch/src/Web/Web.csproj
+```
+
+## Tim
+
+| Nama | Peran |
 |---|---|
-| 1 | Nathaniel Dennis Y.S. |
-| 2 | Bennaya Muhammad Caesar |
-| 3 | Hadi Sumanjaya |
+| <Nathaniel Dennis Yosafat Sidauruk> | <Peran> |
+| <Bennaya Muhammad Caesar> | <Peran> |
+| <Hadi Sumanjaya> | <Peran> |

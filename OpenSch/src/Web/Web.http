@@ -1,0 +1,23 @@
+﻿# For more info on HTTP files go to https://aka.ms/vs/httpfile
+@Web_HostAddress = https://localhost:7195
+@AuthCookieName = .AspNetCore.Identity.Application
+@AuthCookieValue = <AuthCookieValue>
+
+# GET Identity Account Login
+# Get the @RequestVerificationToken necessary for logging in.
+GET {{Web_HostAddress}}/Identity/Account/Login
+
+###
+
+# POST Identity Account Login
+# Get the @AuthCookieValue necessary for authenticating requests.
+@Email=administrator@localhost
+@Password=Administrator1!
+@RequestVerificationToken=<RequestVerificationToken>
+POST {{Web_HostAddress}}/Identity/Account/Login
+Content-Type: application/x-www-form-urlencoded
+
+Input.Email={{Email}}&Input.Password={{Password}}&__RequestVerificationToken={{RequestVerificationToken}}
+
+###
+

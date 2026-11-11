@@ -1,0 +1,4 @@
+npsn,nama,jenjang,status,wilayah,kecamatan,murid,guru,ruang_kelas,literasi,numerasi,tanggal_data
+20100001,SDN Contoh 01,SD,Negeri,Jakarta Selatan,Tebet,320,21,12,85.5,80.0,2026-01-15
+20100002,SMP Contoh 02,SMP,Swasta,Jakarta Barat,Kebon Jeruk,410,26,15,78.0,82.5,2026-01-15
+20100003,SMK Contoh 03,SMK,Negeri,Jakarta Timur,Cakung,520,32,18,81.0,86.5,2026-01-15
