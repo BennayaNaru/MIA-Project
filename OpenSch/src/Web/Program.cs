@@ -100,6 +100,12 @@ app.UseRateLimiter();
 app.UseFileServer();
 
 app.MapDefaultEndpoints();
+if (!app.Environment.IsDevelopment())
+{
+    // Container platforms (Railway, App Service, ACA) need a cheap liveness endpoint.
+    // Startup already ran the migrations, so a 200 also means the database is reachable.
+    app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
+}
 app.MapEndpoints(typeof(Program).Assembly);
 app.MapFallbackToFile("index.html");
 

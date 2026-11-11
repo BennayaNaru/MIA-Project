@@ -92,6 +92,69 @@ database also exposes a read-only view named `pengguna` with `id`, `nama`, `emai
 hashes are not exposed by the view. PostgreSQL creates it with the `AddPenggunaView`
 migration; SQLite creates it during startup after `EnsureCreated`.
 
+## Ranking page and deterministic summary
+
+The `/peringkat` page compares schools only inside the same education level and city.
+`GET /api/schools` returns each school's rank inside its own `(Level, City)` group, and
+the page shows the Top N list plus a rule-based summary:
+
+```http
+GET /api/schools/ranking/summary?level=SMP&city=Jakarta%20Selatan&limit=10
+```
+
+- `level` and `city` are required and validated against the persisted data.
+- `limit` is clamped to 1..50 (default 10).
+- The response contains `level`, `city`, `totalSchools`, the ranked `schools`, and a
+  `narrative` with `headline`, `points`, and `scopeNote`.
+- The narrative is deterministic and rule-based. It never calls an AI provider; the AI
+  comparison feature remains separate on `/api/compare/ai`.
+
+## Deploy with Railway (Docker)
+
+The repository contains a multi-stage `Dockerfile`, `.dockerignore`, and `railway.json`.
+The Dockerfile builds the React SPA with Node, publishes the .NET app with
+`/p:SkipClientBuild=true`, and runs it on port 8080. Local `dotnet publish` still builds
+the SPA because `PublishRunWebpack` is skipped only when that property is set.
+
+1. Create a Railway service from the GitHub repository.
+2. Set **Root Directory** to `OpenSch`.
+3. Set **Config File Path** to `/OpenSch/railway.json` (Railway config files do not
+   follow the root directory automatically). Railway currently marks config-as-code as
+   deprecated; if the file is no longer applied, use the same values in the service
+   settings instead.
+4. Choose the **Singapore** region and keep **one replica** (migrations run at startup).
+5. Generate a public domain and set its target port to `8080`.
+6. Configure the variables below in the Railway service.
+
+| Variable | Purpose |
+| --- | --- |
+| `ASPNETCORE_FORWARDEDHEADERS_ENABLED` | `true`; Railway terminates TLS, so forwarded headers must be trusted. |
+| `DatabaseProvider` | `Postgres`. |
+| `ConnectionStrings__OpenSchDb` | Supabase PostgreSQL connection string. |
+| `Cors__AllowedOrigins__0` | `https://<your-railway-domain>` (same-origin requests work without CORS, but the policy requires an explicit origin). |
+| `Turnstile__Enabled` | `true` to protect registration. |
+| `Turnstile__SiteKey` / `Turnstile__SecretKey` | Real Cloudflare keys for the deployed hostname. |
+| `Email__FromAddress` | Sender address for confirmation and password-reset mail. |
+| `Email__Smtp__Host` / `__Port` / `__UseSsl` / `__UserName` / `__Password` | SMTP credentials. Without SMTP, production registration fails while sending the confirmation email. |
+| `AdminBootstrap__Email` / `__Password` | First-boot administrator only; remove the password afterwards. |
+| `AiComparison__Enabled` / `__Endpoint` / `__Model` / `__ApiKey` | Optional AI comparison provider. |
+
+Use Supabase's **session pooler on port 5432** (not the transaction pooler on 6543)
+because the app applies EF Core migrations during startup. A typical value looks like:
+
+```text
+Host=aws-0-<region>.pooler.supabase.com;Port=5432;Database=postgres;Username=postgres.<project-ref>;Password=<password>;SSL Mode=Require
+```
+
+Add the deployed hostname (the Railway domain or your custom domain) to the Turnstile
+widget in Cloudflare. The public test keys work on any hostname but should not be used as
+production security. `GET /health` is mapped outside Development for Railway's
+healthcheck.
+
+The Docker image has not been built on this machine because Docker is not installed;
+Railway builds it on the first deploy. Verify the first deployment's logs for the
+`dotnet restore`, `npm ci`, and `dotnet publish` stages.
+
 ## Code Styles & Formatting
 
 The template includes [EditorConfig](https://editorconfig.org/) support to help maintain consistent coding styles for multiple developers working on the same project across various editors and IDEs. The **.editorconfig** file defines the coding styles applicable to this solution.

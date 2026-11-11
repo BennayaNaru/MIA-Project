@@ -7,6 +7,54 @@
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
 
+export class OpenSch_WebClient {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        this.http = http ? http : window as any;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    /**
+     * @return OK
+     */
+    health(): Promise<void> {
+        let url_ = this.baseUrl + "/health";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processHealth(_response);
+        });
+    }
+
+    protected processHealth(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            return throwException("Bad Request", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+}
+
 export class AdminEndpointsClient {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
@@ -406,6 +454,64 @@ export class SchoolsClient {
             });
         }
         return Promise.resolve<SchoolDto[]>(null as any);
+    }
+
+    /**
+     * Get a ranking summary for one level and city
+     * @param limit (optional) 
+     * @return OK
+     */
+    getRankingSummary(level: string, city: string, limit: number | undefined): Promise<RankingSummary> {
+        let url_ = this.baseUrl + "/api/schools/ranking/summary?";
+        if (level === undefined || level === null)
+            throw new globalThis.Error("The parameter 'level' must be defined and cannot be null.");
+        else
+            url_ += "level=" + encodeURIComponent("" + level) + "&";
+        if (city === undefined || city === null)
+            throw new globalThis.Error("The parameter 'city' must be defined and cannot be null.");
+        else
+            url_ += "city=" + encodeURIComponent("" + city) + "&";
+        if (limit === null)
+            throw new globalThis.Error("The parameter 'limit' cannot be null.");
+        else if (limit !== undefined)
+            url_ += "limit=" + encodeURIComponent("" + limit) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetRankingSummary(_response);
+        });
+    }
+
+    protected processGetRankingSummary(response: Response): Promise<RankingSummary> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = RankingSummary.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ValidationProblemDetails.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<RankingSummary>(null as any);
     }
 }
 
@@ -2070,6 +2176,149 @@ export class PublicClientConfig implements IPublicClientConfig {
 export interface IPublicClientConfig {
     turnstileEnabled: boolean;
     turnstileSiteKey: string;
+
+    [key: string]: any;
+}
+
+export class RankingNarrative implements IRankingNarrative {
+    headline!: string;
+    points!: string[];
+    scopeNote!: string;
+
+    [key: string]: any;
+
+    constructor(data?: IRankingNarrative) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+        if (!data) {
+            this.points = [];
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.headline = _data["headline"];
+            if (Array.isArray(_data["points"])) {
+                this.points = [] as any;
+                for (let item of _data["points"])
+                    this.points!.push(item);
+            }
+            this.scopeNote = _data["scopeNote"];
+        }
+    }
+
+    static fromJS(data: any): RankingNarrative {
+        data = typeof data === 'object' ? data : {};
+        let result = new RankingNarrative();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["headline"] = this.headline;
+        if (Array.isArray(this.points)) {
+            data["points"] = [];
+            for (let item of this.points)
+                data["points"].push(item);
+        }
+        data["scopeNote"] = this.scopeNote;
+        return data;
+    }
+}
+
+export interface IRankingNarrative {
+    headline: string;
+    points: string[];
+    scopeNote: string;
+
+    [key: string]: any;
+}
+
+export class RankingSummary implements IRankingSummary {
+    level!: string;
+    city!: string;
+    totalSchools!: number;
+    schools!: SchoolDto[];
+    narrative!: RankingNarrative;
+
+    [key: string]: any;
+
+    constructor(data?: IRankingSummary) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+        if (!data) {
+            this.schools = [];
+            this.narrative = new RankingNarrative();
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.level = _data["level"];
+            this.city = _data["city"];
+            this.totalSchools = _data["totalSchools"];
+            if (Array.isArray(_data["schools"])) {
+                this.schools = [] as any;
+                for (let item of _data["schools"])
+                    this.schools!.push(SchoolDto.fromJS(item));
+            }
+            this.narrative = _data["narrative"] ? RankingNarrative.fromJS(_data["narrative"]) : new RankingNarrative();
+        }
+    }
+
+    static fromJS(data: any): RankingSummary {
+        data = typeof data === 'object' ? data : {};
+        let result = new RankingSummary();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["level"] = this.level;
+        data["city"] = this.city;
+        data["totalSchools"] = this.totalSchools;
+        if (Array.isArray(this.schools)) {
+            data["schools"] = [];
+            for (let item of this.schools)
+                data["schools"].push(item ? item.toJSON() : undefined as any);
+        }
+        data["narrative"] = this.narrative ? this.narrative.toJSON() : undefined as any;
+        return data;
+    }
+}
+
+export interface IRankingSummary {
+    level: string;
+    city: string;
+    totalSchools: number;
+    schools: SchoolDto[];
+    narrative: RankingNarrative;
 
     [key: string]: any;
 }

@@ -1,0 +1,24 @@
+# Build output
+**/bin/
+**/obj/
+artifacts/
+
+# JavaScript dependencies and local build output
+**/node_modules/
+src/Web/ClientApp/build/
+
+# Generated at build time from the .NET project
+src/Web/wwwroot/openapi/
+
+# Local SQLite fallback
+*.db
+*.db-shm
+*.db-wal
+
+# Local tooling
+.git/
+.vs/
+.idea/
+.vscode/
+**/*.user
+**/*.suo

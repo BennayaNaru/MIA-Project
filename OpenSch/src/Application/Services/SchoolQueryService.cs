@@ -10,8 +10,18 @@ namespace OpenSch.Application.Services;
 /// </summary>
 public interface ISchoolQueryService
 {
-    /// <summary>Returns every persisted school, ranked by composite then literacy score.</summary>
+    /// <summary>Returns every persisted school, ranked inside its level and city group.</summary>
     Task<IReadOnlyList<SchoolDto>> GetAllAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Returns the top schools for one education level and city plus a deterministic
+    /// rule-based summary. The scope is validated so ranks are never mixed across groups.
+    /// </summary>
+    Task<RankingResult> GetRankingAsync(
+        string level,
+        string city,
+        int limit,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Resolves a user-supplied list of 2 or 3 school IDs against the database.
@@ -38,6 +48,69 @@ public sealed class SchoolQueryService(IApplicationDbContext context) : ISchoolQ
         return Rank(schools);
     }
 
+    public async Task<RankingResult> GetRankingAsync(
+        string level,
+        string city,
+        int limit,
+        CancellationToken cancellationToken = default)
+    {
+        var schools = await GetAllAsync(cancellationToken);
+
+        if (schools.Count == 0)
+        {
+            return RankingResult.Failure("level", "Belum ada data sekolah untuk dihitung peringkatnya.");
+        }
+
+        var levels = schools
+            .Select(school => school.Level)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(value => value, StringComparer.Ordinal)
+            .ToArray();
+
+        var cities = schools
+            .Select(school => school.City)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(value => value, StringComparer.Ordinal)
+            .ToArray();
+
+        var canonicalLevel = levels.FirstOrDefault(value =>
+            value.Equals(level.Trim(), StringComparison.OrdinalIgnoreCase));
+
+        if (canonicalLevel is null)
+        {
+            return RankingResult.Failure(
+                "level",
+                $"Jenjang tidak dikenal. Pilihan: {string.Join(", ", levels)}.");
+        }
+
+        var canonicalCity = cities.FirstOrDefault(value =>
+            value.Equals(city.Trim(), StringComparison.OrdinalIgnoreCase));
+
+        if (canonicalCity is null)
+        {
+            return RankingResult.Failure(
+                "city",
+                $"Kota administrasi tidak dikenal. Pilihan: {string.Join(", ", cities)}.");
+        }
+
+        var scoped = schools
+            .Where(school =>
+                school.Level.Equals(canonicalLevel, StringComparison.OrdinalIgnoreCase) &&
+                school.City.Equals(canonicalCity, StringComparison.OrdinalIgnoreCase))
+            .OrderBy(school => school.Rank)
+            .ThenBy(school => school.Id, StringComparer.Ordinal)
+            .ToList();
+
+        var pageSize = Math.Clamp(limit <= 0 ? 10 : limit, 1, 50);
+
+        return RankingResult.Success(new RankingSummary(
+            canonicalLevel,
+            canonicalCity,
+            scoped.Count,
+            scoped.Take(pageSize).ToList(),
+            RankingNarrativeFactory.Create(canonicalLevel, canonicalCity, scoped)));
+    }
+
     public async Task<SchoolSelection> ResolveForComparisonAsync(
         IReadOnlyList<string>? requestedIds,
         CancellationToken cancellationToken = default)
@@ -62,10 +135,17 @@ public sealed class SchoolQueryService(IApplicationDbContext context) : ISchoolQ
     private static IReadOnlyList<SchoolDto> Rank(IEnumerable<Sekolah> schools) =>
         schools
             .Select(ToDto)
+            // A rank is only fair inside the same level and city. Group first, assign
+            // 1..N per group, then restore the global composite ordering used by lists.
+            .GroupBy(school => (school.Level, school.City))
+            .SelectMany(group => group
+                .OrderByDescending(school => school.CompositeScore)
+                .ThenByDescending(school => school.LiteracyScore)
+                .ThenBy(school => school.Id, StringComparer.Ordinal)
+                .Select((school, index) => school with { Rank = index + 1 }))
             .OrderByDescending(school => school.CompositeScore)
             .ThenByDescending(school => school.LiteracyScore)
             .ThenBy(school => school.Id, StringComparer.Ordinal)
-            .Select((school, index) => school with { Rank = index + 1 })
             .ToList();
 
     private static SchoolDto ToDto(Sekolah school)

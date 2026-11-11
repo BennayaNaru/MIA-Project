@@ -62,6 +62,61 @@ public class SchoolQueryServiceTests
     }
 
     [Test]
+    public async Task GetAllAsyncScopesRanksToTheSameLevelAndCity()
+    {
+        _context.Sekolah.AddRange(
+            School("DKI-01", "Alpha", 80m, 90m),
+            School("DKI-02", "Beta", 70m, 70m),
+            School("DKI-03", "Gamma", 90m, 80m, level: "SD"),
+            School("DKI-04", "Delta", 95m, 95m, city: "Jakarta Timur"));
+        await _context.SaveChangesAsync();
+
+        var schools = await new SchoolQueryService(_context).GetAllAsync();
+
+        schools.Single(school => school.Id == "DKI-03").Rank.ShouldBe(1);
+        schools.Single(school => school.Id == "DKI-04").Rank.ShouldBe(1);
+        schools.Single(school => school.Id == "DKI-01").Rank.ShouldBe(1);
+        schools.Single(school => school.Id == "DKI-02").Rank.ShouldBe(2);
+    }
+
+    [Test]
+    public async Task GetRankingAsyncReturnsScopedSummaryAndHonorsLimit()
+    {
+        _context.Sekolah.AddRange(
+            School("DKI-01", "Alpha", 80m, 90m),
+            School("DKI-02", "Beta", 70m, 70m),
+            School("DKI-03", "Gamma", 90m, 80m, level: "SD"));
+        await _context.SaveChangesAsync();
+
+        var result = await new SchoolQueryService(_context)
+            .GetRankingAsync("smp", "jakarta selatan", limit: 1);
+
+        result.Succeeded.ShouldBeTrue();
+        result.Summary!.Level.ShouldBe("SMP");
+        result.Summary.City.ShouldBe("Jakarta Selatan");
+        result.Summary.TotalSchools.ShouldBe(2);
+        result.Summary.Schools.Count.ShouldBe(1);
+        result.Summary.Schools[0].Id.ShouldBe("DKI-01");
+        result.Summary.Schools[0].Rank.ShouldBe(1);
+        result.Summary.Narrative.Points.ShouldNotBeEmpty();
+        result.Summary.Narrative.ScopeNote.ShouldContain("deterministik");
+    }
+
+    [Test]
+    public async Task GetRankingAsyncRejectsUnknownCity()
+    {
+        _context.Sekolah.Add(School("DKI-01", "Alpha", 80m, 90m));
+        await _context.SaveChangesAsync();
+
+        var result = await new SchoolQueryService(_context)
+            .GetRankingAsync("SMP", "Bandung", limit: 10);
+
+        result.Succeeded.ShouldBeFalse();
+        result.Field.ShouldBe("city");
+        result.Error!.ShouldContain("Jakarta Selatan");
+    }
+
+    [Test]
     public async Task ResolveForComparisonAsyncPreservesRequestedOrder()
     {
         _context.Sekolah.AddRange(
@@ -122,13 +177,20 @@ public class SchoolQueryServiceTests
         selection.Error.ShouldBe("Pilih tepat 2 atau 3 sekolah.");
     }
 
-    private static Sekolah School(string id, string name, decimal literacy, decimal numeracy) => new()
+    private static Sekolah School(
+        string id,
+        string name,
+        decimal literacy,
+        decimal numeracy,
+        string level = "SMP",
+        string city = "Jakarta Selatan",
+        string district = "Tebet") => new()
     {
         Id = id,
         Nama = name,
-        Kota = "Jakarta",
-        KabupatenKota = "Jakarta Selatan",
-        Level = "SMP",
+        Kota = city,
+        KabupatenKota = district,
+        Level = level,
         SkorMelekHuruf = literacy,
         SkorMelekAngka = numeracy,
         SkorKomposit = decimal.Round((literacy + numeracy) / 2m, 1),

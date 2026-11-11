@@ -6,6 +6,7 @@ export const SITE = {
 export const NAV_LINKS = [
   { to: '/', label: 'Beranda' },
   { to: '/cari', label: 'Cari Sekolah' },
+  { to: '/peringkat', label: 'Peringkat' },
   { to: '/bandingkan', label: 'Bandingkan' },
   { to: '/tentang-data', label: 'Tentang Data' },
 ]

@@ -2,6 +2,7 @@ import LandingPage from "./pages/LandingPage";
 import AuthPage from "./pages/LoginPage"; 
 import { Navigate } from "react-router-dom";
 import CariSekolahPage from './pages/CariSekolahPage';
+import PeringkatPage from './pages/PeringkatPage';
 import BandingkanPage from './pages/BandingkanPage';
 import TentangDataPage from './pages/TentangDataPage'
 import AdminImportPage from './pages/AdminImportPage'
@@ -18,6 +19,10 @@ const AppRoutes = [
 
   { path: '/cari', 
     element: <CariSekolahPage /> 
+  },
+
+  { path: '/peringkat',
+    element: <PeringkatPage />
   },
 
   { path: '/bandingkan',
