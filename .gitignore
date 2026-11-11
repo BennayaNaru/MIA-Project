@@ -5,3 +5,8 @@ OpenSch.Api/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Local SQLite fallback
+*.db
+*.db-shm
+*.db-wal

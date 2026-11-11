@@ -16,6 +16,25 @@ public static class DependencyInjection
 
         builder.Services.AddHttpContextAccessor();
 
+        // Cloudflare Turnstile: the secret key stays on the server. Fail fast when the
+        // feature is enabled without both keys instead of silently blocking registrations.
+        builder.Services.Configure<TurnstileOptions>(
+            builder.Configuration.GetSection(TurnstileOptions.SectionName));
+
+        var turnstile = builder.Configuration
+            .GetSection(TurnstileOptions.SectionName)
+            .Get<TurnstileOptions>() ?? new TurnstileOptions();
+
+        if (turnstile.Enabled &&
+            (string.IsNullOrWhiteSpace(turnstile.SiteKey) || string.IsNullOrWhiteSpace(turnstile.SecretKey)))
+        {
+            throw new InvalidOperationException(
+                "Turnstile is enabled but Turnstile:SiteKey or Turnstile:SecretKey is missing. " +
+                "Set both values or set Turnstile:Enabled=false.");
+        }
+
+        builder.Services.AddHttpClient<TurnstileVerifier>();
+
         builder.Services.AddExceptionHandler<ProblemDetailsExceptionHandler>();
         builder.Services.AddProblemDetails();
 

@@ -3,9 +3,18 @@ import { UsersClient, LoginRequest, RegisterRequest } from '../../web-api-client
 
 const AuthContext = createContext(null);
 
-const client = new UsersClient(undefined, {
-  fetch: (url, init) => fetch(url, { ...init, credentials: 'include' }),
-});
+const createClient = (turnstileToken) =>
+  new UsersClient(undefined, {
+    fetch: (url, init) => {
+      const headers = new Headers(init?.headers);
+      if (turnstileToken) {
+        headers.set('X-Turnstile-Token', turnstileToken);
+      }
+      return fetch(url, { ...init, headers, credentials: 'include' });
+    },
+  });
+
+const client = createClient();
 
 const loadAdminStatus = () =>
   fetch('/api/admin/me', { credentials: 'include', headers: { Accept: 'application/json' } })
@@ -36,8 +45,8 @@ export function AuthProvider({ children }) {
       .then(() => setIsAuthenticated(true))
       .then(() => loadAdminStatus().then(setIsAdmin));
 
-  const register = (email, password) =>
-    client.register(new RegisterRequest({ email, password }));
+  const register = (email, password, turnstileToken) =>
+    createClient(turnstileToken).register(new RegisterRequest({ email, password }));
 
   const logout = () =>
     client.logout({})

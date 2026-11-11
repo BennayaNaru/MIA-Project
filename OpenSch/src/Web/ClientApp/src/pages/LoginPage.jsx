@@ -3,7 +3,21 @@ import { Link, useLocation, useNavigate, useSearchParams } from "react-router-do
 import { useAuth } from "../components/api-authorization/AuthContext";
 import AuthShowcase from "../components/auth/AuthShowcase";
 import AuthField from "../components/auth/AuthField";
+import TurnstileWidget from "../components/auth/TurnstileWidget";
 import Icon from "../components/common/Icon";
+import { usePublicConfig } from "../hooks/usePublicConfig";
+
+const parseAuthError = (error) => {
+  const fallback = error?.message || "Gagal memproses permintaan. Coba lagi.";
+
+  try {
+    const body = JSON.parse(error.message);
+    const validationMessage = body.errors ? Object.values(body.errors).flat()[0] : null;
+    return body.detail || validationMessage || body.title || fallback;
+  } catch {
+    return fallback;
+  }
+};
 
 
 const tabClass = (active) =>
@@ -17,17 +31,24 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const mode = params.get("mode") === "daftar" ? "daftar" : "masuk";
+  const { turnstileEnabled, turnstileSiteKey, ready: configReady } = usePublicConfig();
 
   const [form, setForm] = useState({ nama: "", email: "", password: "", konfirmasi: "", ingat: true, setuju: false });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const [turnstileReset, setTurnstileReset] = useState(0);
   const { login, register } = useAuth();
+
+  const turnstileRequired = mode === "daftar" && turnstileEnabled && Boolean(turnstileSiteKey);
 
   const set = (key) => (e) =>
     setForm((f) => ({ ...f, [key]: e.target.type === "checkbox" ? e.target.checked : e.target.value }));
 
   const switchMode = (m) => {
     setError("");
+    setTurnstileToken("");
+    setTurnstileReset((value) => value + 1);
     setParams(m === "daftar" ? { mode: "daftar" } : {});
   };
 
@@ -38,15 +59,22 @@ export default function LoginPage() {
       setError("Kata sandi dan konfirmasinya belum sama.");
       return;
     }
+    if (turnstileRequired && !turnstileToken) {
+      setError("Selesaikan verifikasi keamanan terlebih dahulu.");
+      return;
+    }
     setLoading(true);
     try {
       if (mode === "daftar") {
-        await register(form.email, form.password);
+        await register(form.email, form.password, turnstileToken);
       }
       await login(form.email, form.password, form.ingat);
       navigate(location.state?.returnUrl || "/", { replace: true });
     } catch (err) {
-      setError(err.message || "Gagal memproses permintaan. Coba lagi.");
+      // Turnstile tokens are single-use, so request a fresh one after any failure.
+      setTurnstileToken("");
+      setTurnstileReset((value) => value + 1);
+      setError(parseAuthError(err));
     } finally {
       setLoading(false);
     }
@@ -120,6 +148,22 @@ export default function LoginPage() {
               </label>
             )}
 
+            {turnstileRequired && (
+              <div className="rounded-lg border border-outline-variant/60 px-3 py-2">
+                <TurnstileWidget
+                  key={turnstileReset}
+                  siteKey={turnstileSiteKey}
+                  action="register"
+                  onToken={setTurnstileToken}
+                  onExpire={() => setTurnstileToken("")}
+                  onError={() => setTurnstileToken("")}
+                />
+                <p className="text-[11px] text-outline">
+                  Dilindungi Cloudflare Turnstile. Tidak perlu memecahkan teka-teki.
+                </p>
+              </div>
+            )}
+
             {error && (
               <p role="alert" className="flex items-center gap-2 text-sm text-error bg-error-container/40 rounded-lg px-3 py-2">
                 <Icon name="error" className="text-[18px]" /> {error}
@@ -128,7 +172,7 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || (mode === "daftar" && !configReady)}
               className="w-full py-3 rounded-xl bg-primary hover:bg-[#122D42] disabled:opacity-60 text-white text-sm font-bold flex items-center justify-center gap-2 shadow-sm transition-all"
             >
               <span>{loading ? "Memproses..." : mode === "masuk" ? "Masuk ke Akun OpenSch" : "Daftar Sekarang"}</span>

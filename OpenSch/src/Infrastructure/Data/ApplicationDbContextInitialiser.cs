@@ -58,6 +58,7 @@ public class ApplicationDbContextInitialiser
             {
                 // Keep SQLite as a zero-setup local/test fallback.
                 await _context.Database.EnsureCreatedAsync();
+                await EnsurePenggunaViewAsync();
             }
         }
         catch (Exception ex)
@@ -65,6 +66,40 @@ public class ApplicationDbContextInitialiser
             _logger.LogError(ex, "An error occurred while initialising the database.");
             throw;
         }
+    }
+
+    /// <summary>
+    /// SQLite uses EnsureCreated instead of migrations, so the read-only ERD-aligned
+    /// <c>pengguna</c> view has to be created explicitly. PostgreSQL gets it from the
+    /// AddPenggunaView migration.
+    /// </summary>
+    private async Task EnsurePenggunaViewAsync()
+    {
+        if (!_context.Database.IsSqlite())
+        {
+            return;
+        }
+
+        await _context.Database.ExecuteSqlRawAsync("DROP VIEW IF EXISTS pengguna;");
+        await _context.Database.ExecuteSqlRawAsync(
+            """
+            CREATE VIEW pengguna AS
+            SELECT
+                u."Id" AS id,
+                u."UserName" AS nama,
+                u."Email" AS email,
+                COALESCE(
+                    (
+                        SELECT MIN(r."Name")
+                        FROM "AspNetUserRoles" ur
+                        JOIN "AspNetRoles" r ON r."Id" = ur."RoleId"
+                        WHERE ur."UserId" = u."Id"
+                    ),
+                    'Pengguna'
+                ) AS peran,
+                u."EmailConfirmed" AS email_terkonfirmasi
+            FROM "AspNetUsers" u;
+            """);
     }
 
     public async Task SeedAsync()

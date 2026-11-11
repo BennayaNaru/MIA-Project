@@ -58,6 +58,40 @@ shows a row-level error report. Successful and failed runs are recorded in `impo
 The feature is only reachable through the administrator-only `/api/admin/*` endpoints;
 public school reads are never affected by an import.
 
+## Bot protection (Cloudflare Turnstile)
+
+Registration requires a Cloudflare Turnstile token. The browser renders the widget and
+sends the token in the `X-Turnstile-Token` header; the API verifies it with Cloudflare
+before the Identity `/register` endpoint runs. Login is intentionally not protected so
+existing demo accounts keep working if the Turnstile script is blocked.
+
+Development uses Cloudflare's public test keys from `appsettings.Development.json`:
+
+- Site key: `1x00000000000000000000AA`
+- Secret key: `1x0000000000000000000000000000000AA`
+
+These keys always pass and are safe to publish. For production, create a Turnstile
+widget for your domain and set real values through environment variables or
+`dotnet user-secrets`:
+
+```bash
+dotnet user-secrets set "Turnstile:Enabled" "true" --project .\src\Web\Web.csproj
+dotnet user-secrets set "Turnstile:SiteKey" "<site-key>" --project .\src\Web\Web.csproj
+dotnet user-secrets set "Turnstile:SecretKey" "<secret-key>" --project .\src\Web\Web.csproj
+```
+
+`Turnstile:Enabled=false` disables verification (for example, at an offline demo). The
+public site key is exposed through `GET /api/config/public`; the secret key never leaves
+the server.
+
+## ERD-aligned pengguna view
+
+ASP.NET Identity stores users in `"AspNetUsers"`. For ERD and reporting purposes the
+database also exposes a read-only view named `pengguna` with `id`, `nama`, `email`,
+`peran`, and `email_terkonfirmasi`. Writes still go through Identity, and password
+hashes are not exposed by the view. PostgreSQL creates it with the `AddPenggunaView`
+migration; SQLite creates it during startup after `EnsureCreated`.
+
 ## Code Styles & Formatting
 
 The template includes [EditorConfig](https://editorconfig.org/) support to help maintain consistent coding styles for multiple developers working on the same project across various editors and IDEs. The **.editorconfig** file defines the coding styles applicable to this solution.

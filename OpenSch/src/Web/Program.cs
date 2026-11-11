@@ -1,4 +1,5 @@
 using OpenSch.Infrastructure.Data;
+using OpenSch.Web.Infrastructure;
 using Scalar.AspNetCore;
 using System.Security.Claims;
 using System.Threading.RateLimiting;
@@ -90,6 +91,8 @@ else
 app.UseExceptionHandler();
 app.UseHttpsRedirection();
 app.UseCors("Frontend");
+// Registration is bot-protected before the Identity endpoint runs.
+app.UseMiddleware<TurnstileMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 // Rate limiting runs after authentication so the AI policy can partition by user.
