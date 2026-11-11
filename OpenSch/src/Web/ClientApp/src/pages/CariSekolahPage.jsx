@@ -4,7 +4,6 @@ import Icon from '../components/common/Icon'
 import SchoolCard from '../components/schools/SchoolCard'
 import SchoolTable from '../components/schools/SchoolTable'
 import { useCompare } from '../context/CompareContext'
-import { ALL_SCHOOLS, KECAMATAN_MAP } from '../data/schools'
 
 const field =
     'w-full rounded-lg border border-outline-variant px-2.5 py-1.5 text-xs focus:border-secondary focus:ring-1 focus:ring-secondary'
@@ -19,7 +18,14 @@ const SORTERS = {
 
 export default function CariSekolahPage() {
     const [params] = useSearchParams()
-    const { selectedIds, toggle, openDetail } = useCompare()
+    const {
+        selectedIds, toggle, openDetail,
+        schools: ALL_SCHOOLS,
+        kecamatanMap: KECAMATAN_MAP,
+        benchmark: BENCHMARK,
+        schoolsLoading,
+        schoolsError,
+    } = useCompare()
     const [search, setSearch] = useState(params.get('q') ?? '')
     const [f, setF] = useState(INITIAL)
     const [mode, setMode] = useState('cards')
@@ -47,7 +53,7 @@ export default function CariSekolahPage() {
                 s.lit >= f.minLit &&
                 s.num >= f.minNum
         ).sort(SORTERS[f.sort])
-    }, [search, f])
+    }, [search, f, ALL_SCHOOLS])
 
     const avg = (key) =>
         list.length ? (list.reduce((t, s) => t + s[key], 0) / list.length).toFixed(1) : '0.0'
@@ -187,7 +193,16 @@ export default function CariSekolahPage() {
             </div>
 
             {/* Hasil */}
-            {list.length === 0 ? (
+            {schoolsLoading ? (
+                <div className="rounded-2xl border border-outline-variant bg-white py-12 text-center">
+                    <div className="mx-auto mb-3 h-6 w-6 animate-spin rounded-full border-2 border-secondary border-t-transparent" />
+                    <p className="text-xs text-on-surface-variant">Memuat katalog sekolah dari server...</p>
+                </div>
+            ) : schoolsError ? (
+                <div className="rounded-2xl border border-error/30 bg-error-container/20 p-4 text-center text-xs text-error">
+                    {schoolsError}
+                </div>
+            ) : list.length === 0 ? (
                 <div className="rounded-2xl border border-dashed border-outline-variant bg-white py-12 text-center">
                     <Icon name="search_off" className="mb-2 text-4xl text-outline" />
                     <h3 className="text-base font-bold text-primary">Tidak Ada Sekolah Ditemukan</h3>
@@ -201,7 +216,14 @@ export default function CariSekolahPage() {
             ) : mode === 'cards' ? (
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                     {list.map((s) => (
-                        <SchoolCard key={s.id} school={s} selected={selectedIds.includes(s.id)} onToggle={toggle} onDetail={openDetail} />
+                        <SchoolCard
+                            key={s.id}
+                            school={s}
+                            selected={selectedIds.includes(s.id)}
+                            onToggle={toggle}
+                            onDetail={openDetail}
+                            benchmark={BENCHMARK}
+                        />
                     ))}
                 </div>
             ) : (

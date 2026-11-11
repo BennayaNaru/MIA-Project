@@ -2,32 +2,56 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Icon from '../components/common/Icon'
 import { useCompare } from '../context/CompareContext'
-import { BASELINE } from '../data/schools'
-
-// TODO: sambungkan ke status login dari AuthContext saat halaman Masuk selesai.
-// Selama false, toggle AI akan memunculkan modal "Masuk untuk Mengaktifkan AI".
-const IS_LOGGED_IN = false
+import { useAuth } from '../components/api-authorization/AuthContext'
 
 export default function BandingkanPage() {
   const navigate = useNavigate()
-  const { selectedSchools: schools, remove, loadDefault } = useCompare()
+  const { selectedSchools: schools, remove, loadDefault, baseline: BASELINE } = useCompare()
+  const { isAuthenticated, isLoading: authLoading } = useAuth()
   const [aiOn, setAiOn] = useState(false)
   const [aiLoading, setAiLoading] = useState(false)
   const [aiRun, setAiRun] = useState(0)
+  const [aiResult, setAiResult] = useState(null)
+  const [aiError, setAiError] = useState(null)
   const [showGate, setShowGate] = useState(false)
   const key = schools.map((s) => s.id).join(',')
 
-  // Simulasi narasi AI: loading 0,5 detik tiap diaktifkan, sekolah berubah, atau Regenerasi
+  // The server resolves IDs against its canonical dataset, then serializes that
+  // data to JSON for the configured AI provider. Browser data is never trusted.
   useEffect(() => {
     if (!aiOn) return
+    const controller = new AbortController()
     setAiLoading(true)
-    const t = setTimeout(() => setAiLoading(false), 500)
-    return () => clearTimeout(t)
+    setAiError(null)
+
+    fetch('/api/compare/ai', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      signal: controller.signal,
+      body: JSON.stringify({ schoolIds: key.split(',') }),
+    })
+      .then(async (response) => {
+        if (!response.ok) throw new Error((await response.json().catch(() => null))?.title ?? 'Perbandingan AI tidak dapat dibuat.')
+        return response.json()
+      })
+      .then(setAiResult)
+      .catch((error) => {
+        if (error.name !== 'AbortError') setAiError(error.message)
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setAiLoading(false)
+      })
+
+    return () => controller.abort()
   }, [aiOn, aiRun, key])
 
   const onToggleAi = (checked) => {
-    if (!checked) return setAiOn(false)
-    if (!IS_LOGGED_IN) return setShowGate(true)
+    if (!checked) {
+      setAiOn(false)
+      return
+    }
+    if (!isAuthenticated) return setShowGate(true)
     setAiOn(true)
   }
 
@@ -49,13 +73,14 @@ export default function BandingkanPage() {
             <Icon name="psychology" className="text-[14px] text-secondary" />
             <span>Asisten Analisis AI</span>
           </div>
-          <span className="text-[10px] text-outline">Simulasi Narasi Terbimbing</span>
+            <span className="text-[10px] text-outline">Ringkasan AI dengan data JSON tervalidasi</span>
         </div>
         <label className="relative inline-flex cursor-pointer items-center">
           <input
             type="checkbox"
             className="peer sr-only"
             checked={aiOn}
+            disabled={authLoading}
             onChange={(e) => onToggleAi(e.target.checked)}
           />
           <div className="h-5 w-10 rounded-full bg-surface-container peer-checked:bg-secondary after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-outline-variant after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white" />
@@ -296,7 +321,7 @@ export default function BandingkanPage() {
         </div>
       </div>
 
-      {/* Panel AI (simulasi) */}
+      {/* Panel AI */}
       {aiOn && (
         <div className="space-y-3 rounded-2xl border-2 border-secondary/30 bg-gradient-to-br from-white to-surface-container-low p-5 shadow-md">
           <div className="flex items-center justify-between border-b border-secondary/20 pb-2">
@@ -306,39 +331,56 @@ export default function BandingkanPage() {
               </div>
               <div>
                 <h4 className="flex items-center gap-1.5 text-xs font-bold text-primary">
-                  <span>Simulasi Narasi AI Assistant</span>
-                  <span className="rounded bg-secondary/10 px-1.5 text-[10px] font-bold text-secondary">Sintetis</span>
+                  <span>Ringkasan Perbandingan AI</span>
+                  <span className="rounded bg-secondary/10 px-1.5 text-[10px] font-bold text-secondary">Data sintetis</span>
                 </h4>
-                <p className="text-[11px] text-outline">Eksplorasi naratif hipotetis pendampingan orang tua</p>
+                <p className="text-[11px] text-outline">AI menerima data metrik dalam JSON yang dibentuk server</p>
               </div>
             </div>
-            <span className="text-xs font-semibold text-secondary">Model: EduRank-DKI-v1.2</span>
+          </div>
+
+          <div role="alert" className="flex items-start gap-2 rounded-lg border border-amber-300 bg-amber-50 p-3 text-xs leading-relaxed text-amber-950">
+            <Icon name="warning" className="mt-0.5 shrink-0 text-[16px] text-amber-700" />
+            <span><strong>Peringatan AI:</strong> AI dapat membuat kesalahan atau melewatkan konteks. Verifikasi angka sumber dan jangan jadikan ringkasan ini satu-satunya dasar memilih sekolah.</span>
           </div>
 
           {aiLoading ? (
             <div className="space-y-2 py-6 text-center">
               <div className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-secondary border-t-transparent" />
-              <p className="text-xs text-on-surface-variant">Menghitung sintesis naratif perbandingan sekolah...</p>
+              <p className="text-xs text-on-surface-variant">Menyiapkan JSON metrik dan membuat ringkasan perbandingan...</p>
+            </div>
+          ) : aiError ? (
+            <div className="rounded-lg border border-error/30 bg-error-container/20 p-3 text-xs text-error">
+              {aiError}
             </div>
           ) : (
             <div className="space-y-2 text-xs leading-relaxed text-on-surface">
-              <p>Berdasarkan simulasi sintesis indikator mutu untuk <strong>{names}</strong>:</p>
-              <ul className="list-disc space-y-1 pl-4">
-                <li>
-                  <strong>Karakteristik Kurikulum:</strong> Perbedaan profil numerasi menunjukkan variasi orientasi pengajaran
-                  logika analitis versus penguatan literasi pemahaman teks.
-                </li>
-                <li>
-                  <strong>Pertimbangan Orang Tua:</strong> Bagi siswa dengan minat logika teknis/vokasi, perhatikan indikator
-                  numerasi sekolah jenjang SMK yang tertera. Sedangkan untuk jenjang dasar (SD/SMP), konsistensi kedua nilai di
-                  atas baseline DKI mencerminkan kesiapan fondasi belajar yang berimbang.
-                </li>
-              </ul>
+              <p>{aiResult?.narrative?.summary ?? `Membuat ringkasan untuk ${names}.`}</p>
+              {aiResult?.narrative?.keyFindings?.length > 0 && (
+                <ul className="list-disc space-y-1 pl-4">
+                  {aiResult.narrative.keyFindings.map((finding) => <li key={finding}>{finding}</li>)}
+                </ul>
+              )}
+              {aiResult?.narrative?.considerations?.length > 0 && (
+                <div className="rounded-lg bg-surface-container p-3 text-[11px] text-on-surface-variant">
+                  <strong className="text-on-surface">Hal yang perlu dipertimbangkan:</strong>
+                  <ul className="mt-1 list-disc space-y-1 pl-4">
+                    {aiResult.narrative.considerations.map((item) => <li key={item}>{item}</li>)}
+                  </ul>
+                </div>
+              )}
+              {aiResult?.warnings?.map((warning) => <p key={warning} className="text-[11px] text-outline">⚠️ {warning}</p>)}
+              {aiResult?.analysisPayload && (
+                <details className="rounded-lg border border-outline-variant/50 bg-white p-2 text-[11px]">
+                  <summary className="cursor-pointer font-semibold text-primary">Lihat JSON yang dikirim untuk analisis</summary>
+                  <pre className="mt-2 max-h-60 overflow-auto whitespace-pre-wrap break-words text-[10px] text-on-surface-variant">{JSON.stringify(aiResult.analysisPayload, null, 2)}</pre>
+                </details>
+              )}
             </div>
           )}
 
           <div className="flex items-center justify-between border-t border-secondary/15 pt-2 text-[11px] text-outline">
-            <span>⚠️ Simulasi narasi AI tidak menggantikan musyawarah keluarga.</span>
+            <span>Sumber: {aiResult?.source === 'ai' ? 'AI terkonfigurasi' : 'ringkasan deterministik server'}.</span>
             <button onClick={() => setAiRun((n) => n + 1)} className="flex items-center gap-0.5 font-bold text-secondary hover:underline">
               <Icon name="refresh" className="text-[14px]" /> Regenerasi
             </button>

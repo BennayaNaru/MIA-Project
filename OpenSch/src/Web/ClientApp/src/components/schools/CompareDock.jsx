@@ -3,7 +3,7 @@ import Icon from '../common/Icon'
 import { useCompare, MAX_COMPARE } from '../../context/CompareContext'
 
 export default function CompareDock() {
-  const { selectedSchools, remove, clear } = useCompare()
+  const { selectedSchools, remove, clear, message } = useCompare()
   const navigate = useNavigate()
   const visible = selectedSchools.length > 0
 
@@ -43,6 +43,7 @@ export default function CompareDock() {
           </button>
         </div>
       </div>
+      {message && <p role="status" className="mt-2 rounded-lg bg-amber-50 px-3 py-2 text-center text-xs font-medium text-amber-900 shadow">{message}</p>}
     </div>
   )
 }

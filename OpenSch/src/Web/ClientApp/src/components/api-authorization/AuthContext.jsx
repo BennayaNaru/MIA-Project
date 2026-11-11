@@ -3,7 +3,9 @@ import { UsersClient, LoginRequest, RegisterRequest } from '../../web-api-client
 
 const AuthContext = createContext(null);
 
-const client = new UsersClient();
+const client = new UsersClient(undefined, {
+  fetch: (url, init) => fetch(url, { ...init, credentials: 'include' }),
+});
 
 export function AuthProvider({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -16,8 +18,8 @@ export function AuthProvider({ children }) {
       .finally(() => setIsLoading(false));
   }, []);
 
-  const login = (email, password) =>
-    client.login(true, undefined, new LoginRequest({ email, password }))
+  const login = (email, password, remember = true) =>
+    client.login(true, !remember, new LoginRequest({ email, password }))
       .then(() => setIsAuthenticated(true));
 
   const register = (email, password) =>

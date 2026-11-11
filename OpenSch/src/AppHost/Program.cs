@@ -4,15 +4,11 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 builder.AddAzureContainerAppEnvironment("aca-env");
 
-var databaseServer = builder
-    .AddAzureSqlServer(Services.DatabaseServer)
-    .RunAsContainer(container => 
-        container.WithLifetime(ContainerLifetime.Persistent))
-    .AddDatabase(Services.Database);
+var databaseConnection = builder.AddConnectionString(Services.Database);
 
 var web = builder.AddProject<Projects.Web>(Services.WebApi)
-    .WithReference(databaseServer)
-    .WaitFor(databaseServer)
+    .WithReference(databaseConnection)
+    .WithEnvironment("DatabaseProvider", "Postgres")
     .WithExternalHttpEndpoints()
     .WithAspNetCoreEnvironment()
     .WithUrlForEndpoint("http", url =>

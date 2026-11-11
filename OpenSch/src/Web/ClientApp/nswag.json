@@ -18,7 +18,7 @@
       "template": "Fetch",
       "promiseType": "Promise",
       "httpClass": "HttpClient",
-      "withCredentials": false,
+      "withCredentials": true,
       "requestCredentials": "include",
       "useSingletonProvider": true,
       "injectionTokenType": "InjectionToken",

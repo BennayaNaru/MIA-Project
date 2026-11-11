@@ -1,10 +1,9 @@
 import Icon from '../common/Icon'
 import { useCompare } from '../../context/CompareContext'
-import { ALL_SCHOOLS, BASELINE } from '../../data/schools'
 
 export default function SchoolDetailModal() {
-  const { detailId, closeDetail, selectedIds, toggle } = useCompare()
-  const s = ALL_SCHOOLS.find((x) => x.id === detailId)
+  const { detailId, closeDetail, selectedIds, toggle, schools, baseline } = useCompare()
+  const s = schools.find((x) => x.id === detailId)
   if (!s) return null
 
   const selected = selectedIds.includes(s.id)
@@ -58,8 +57,8 @@ export default function SchoolDetailModal() {
             </span>
             <p className="leading-relaxed text-on-surface-variant">
               Pada dataset demo 4 Kota DKI, institusi {s.level} di {s.kota} ini memiliki nilai literasi{' '}
-              {s.lit >= BASELINE.lit ? 'di atas' : 'mendekati'} rata-rata DKI ({BASELINE.lit}) dan numerasi{' '}
-              {s.num >= BASELINE.num ? 'di atas' : 'mendekati'} rata-rata DKI ({BASELINE.num}).
+              {s.lit >= baseline.lit ? 'di atas' : 'mendekati'} rata-rata DKI ({baseline.lit}) dan numerasi{' '}
+              {s.num >= baseline.num ? 'di atas' : 'mendekati'} rata-rata DKI ({baseline.num}).
             </p>
           </div>
         </div>

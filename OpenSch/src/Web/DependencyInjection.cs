@@ -17,6 +17,7 @@ public static class DependencyInjection
         builder.Services.AddHttpContextAccessor();
 
         builder.Services.AddExceptionHandler<ProblemDetailsExceptionHandler>();
+        builder.Services.AddProblemDetails();
 
         // Customise default API behaviour
         builder.Services.Configure<ApiBehaviorOptions>(options =>
@@ -30,7 +31,11 @@ public static class DependencyInjection
             options.AddOperationTransformer<IdentityApiOperationTransformer>();
         });
 
-        builder.Services.AddCors();
+
+
+        builder.Services.Configure<AiComparisonOptions>(builder.Configuration.GetSection(AiComparisonOptions.SectionName));
+        builder.Services.AddHttpClient(nameof(AiComparisonService), client => client.Timeout = TimeSpan.FromSeconds(20));
+        builder.Services.AddScoped<IAiComparisonService, AiComparisonService>();
     }
 
     public static void AddKeyVaultIfConfigured(this IHostApplicationBuilder builder)

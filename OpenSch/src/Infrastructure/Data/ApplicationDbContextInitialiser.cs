@@ -1,9 +1,10 @@
-﻿using OpenSch.Domain.Constants;
+﻿using OpenSch.Application.Services;
+using OpenSch.Domain.Constants;
 using OpenSch.Domain.Entities;
-using OpenSch.Domain.ValueObjects;
 using OpenSch.Infrastructure.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -26,14 +27,12 @@ public class ApplicationDbContextInitialiser
 {
     private readonly ILogger<ApplicationDbContextInitialiser> _logger;
     private readonly ApplicationDbContext _context;
-    private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
 
-    public ApplicationDbContextInitialiser(ILogger<ApplicationDbContextInitialiser> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+    public ApplicationDbContextInitialiser(ILogger<ApplicationDbContextInitialiser> logger, ApplicationDbContext context, RoleManager<IdentityRole> roleManager)
     {
         _logger = logger;
         _context = context;
-        _userManager = userManager;
         _roleManager = roleManager;
     }
 
@@ -41,9 +40,15 @@ public class ApplicationDbContextInitialiser
     {
         try
         {
-            // See https://jasontaylor.dev/ef-core-database-initialisation-strategies
-            await _context.Database.EnsureDeletedAsync();
-            await _context.Database.EnsureCreatedAsync();
+            if (_context.Database.IsNpgsql())
+            {
+                await _context.Database.MigrateAsync();
+            }
+            else
+            {
+                // Keep SQLite as a zero-setup local/test fallback.
+                await _context.Database.EnsureCreatedAsync();
+            }
         }
         catch (Exception ex)
         {
@@ -75,34 +80,31 @@ public class ApplicationDbContextInitialiser
             await _roleManager.CreateAsync(administratorRole);
         }
 
-        // Default users
-        var administrator = new ApplicationUser { UserName = "administrator@localhost", Email = "administrator@localhost" };
+        // Administrative accounts must be created through an explicit, protected
+        // provisioning process; never seed a known password into application code.
 
-        if (_userManager.Users.All(u => u.UserName != administrator.UserName))
+        if (!_context.Sekolah.Any())
         {
-            await _userManager.CreateAsync(administrator, "Administrator1!");
-            if (!string.IsNullOrWhiteSpace(administratorRole.Name))
-            {
-                await _userManager.AddToRolesAsync(administrator, new [] { administratorRole.Name });
-            }
-        }
+            var seededAt = DateTimeOffset.UtcNow;
 
-        // Default data
-        // Seed, if necessary
-        if (!_context.TodoLists.Any())
-        {
-            _context.TodoLists.Add(new TodoList
+            // Seed directly from the canonical catalog so persisted ranks can never
+            // drift from the ranks returned by SchoolCatalog.GetAll().
+            var catalog = SchoolCatalog.GetAll();
+
+            _context.Sekolah.AddRange(catalog.Select(s => new Sekolah
             {
-                Title = "Tasks",
-                Colour = Colour.Green,
-                Items =
-                {
-                    new TodoItem { Title = "Make a todo list 📃" },
-                    new TodoItem { Title = "Check off the first item ✅" },
-                    new TodoItem { Title = "Realise you've already done two things on the list! 🤯"},
-                    new TodoItem { Title = "Reward yourself with a nice, long nap 🏆" },
-                }
-            });
+                Id             = s.Id,
+                Nama           = s.Name,
+                Kota           = s.City,
+                KabupatenKota  = s.District,
+                Level          = s.Level,
+                SkorMelekHuruf = s.LiteracyScore,
+                SkorMelekAngka = s.NumeracyScore,
+                SkorKomposit   = s.CompositeScore,
+                Peringkat      = s.Rank,
+                CreatedAt      = seededAt,
+                UpdatedAt      = seededAt,
+            }));
 
             await _context.SaveChangesAsync();
         }

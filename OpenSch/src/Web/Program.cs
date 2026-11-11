@@ -1,5 +1,7 @@
 using OpenSch.Infrastructure.Data;
 using Scalar.AspNetCore;
+using System.Security.Claims;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,36 +13,80 @@ builder.AddApplicationServices();
 builder.AddInfrastructureServices();
 builder.AddWebServices();
 
+// CORS: only the frontend origins listed in config may call the API.
+var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
+    ?.Select(origin => origin.Trim())
+    .Where(origin => origin.Length > 0)
+    .Distinct(StringComparer.OrdinalIgnoreCase)
+    .ToArray()
+    ?? ["http://localhost:5173"];
+
+// Guard: AllowCredentials + wildcard is rejected by the browser and by ASP.NET Core.
+// Also reject partial wildcards so a typo such as "https://*.example.com" fails fast.
+if (allowedOrigins.Length == 0)
+    throw new InvalidOperationException("Cors:AllowedOrigins must contain at least one explicit origin.");
+
+if (allowedOrigins.Any(origin => origin.Contains('*', StringComparison.Ordinal)))
+    throw new InvalidOperationException(
+        "Wildcard origins cannot be used in Cors:AllowedOrigins when AllowCredentials is set. " +
+        "Specify explicit origins instead.");
+
+builder.Services.AddCors(options =>
+    options.AddPolicy("Frontend", policy =>
+        policy.WithOrigins(allowedOrigins)
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials()));
+
+// Rate limiting: the AI endpoint is capped per authenticated user to prevent cost abuse.
+// AddPolicy creates one limiter per partition; AddSlidingWindowLimiter would share a
+// single counter across every caller.
+builder.Services.AddRateLimiter(opts =>
+{
+    opts.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    opts.AddPolicy("ai-per-user", httpContext =>
+    {
+        var userId = httpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var partitionKey = string.IsNullOrWhiteSpace(userId)
+            ? $"ip:{httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown"}"
+            : $"user:{userId}";
+
+        return RateLimitPartition.GetSlidingWindowLimiter(partitionKey, _ => new SlidingWindowRateLimiterOptions
+        {
+            PermitLimit          = 10,
+            Window               = TimeSpan.FromMinutes(1),
+            SegmentsPerWindow    = 2,
+            QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+            QueueLimit           = 0,
+        });
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     await app.InitialiseDatabaseAsync();
+    app.MapOpenApi();
+    app.MapScalarApiReference();
 }
 else
 {
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
+app.UseExceptionHandler();
 app.UseHttpsRedirection();
-app.UseCors(static builder => 
-    builder.AllowAnyMethod()
-        .AllowAnyHeader()
-        .AllowAnyOrigin());
-
+app.UseCors("Frontend");
+app.UseAuthentication();
+app.UseAuthorization();
+// Rate limiting runs after authentication so the AI policy can partition by user.
+app.UseRateLimiter();
 app.UseFileServer();
-
-app.MapOpenApi();
-app.MapScalarApiReference();
-
-app.UseExceptionHandler(options => { });
-
 
 app.MapDefaultEndpoints();
 app.MapEndpoints(typeof(Program).Assembly);
-
 app.MapFallbackToFile("index.html");
 
 app.Run();

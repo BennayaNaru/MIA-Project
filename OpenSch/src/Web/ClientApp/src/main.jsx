@@ -4,8 +4,14 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import './index.css'
 
-const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href');
-const root = createRoot(document.getElementById('root'));
+const baseUrl = document.querySelector('base')?.getAttribute('href') ?? '/';
+const rootElement = document.getElementById('root');
+
+if (!rootElement) {
+  throw new Error('Required #root element was not found.');
+}
+
+const root = createRoot(rootElement);
 
 root.render(
   <BrowserRouter basename={baseUrl}>

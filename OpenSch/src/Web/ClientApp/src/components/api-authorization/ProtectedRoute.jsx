@@ -6,6 +6,6 @@ export function ProtectedRoute({ children }) {
   const location = useLocation();
 
   if (isLoading) return null;
-  if (!isAuthenticated) return <Navigate to="/login" state={{ returnUrl: location.pathname }} replace />;
+  if (!isAuthenticated) return <Navigate to="/masuk" state={{ returnUrl: location.pathname }} replace />;
   return children;
 }

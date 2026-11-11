@@ -1,10 +1,6 @@
-import { Counter } from "./components/Counter";
-import { Weather } from "./components/Weather";
-import { Tasks } from "./components/Todo";
 import LandingPage from "./pages/LandingPage";
 import AuthPage from "./pages/LoginPage"; 
 import { Navigate } from "react-router-dom";
-import { ProtectedRoute } from "./components/api-authorization/ProtectedRoute";
 import CariSekolahPage from './pages/CariSekolahPage';
 import BandingkanPage from './pages/BandingkanPage';
 import TentangDataPage from './pages/TentangDataPage'
@@ -14,20 +10,9 @@ const AppRoutes = [
     element: <LandingPage />
   },
 
-  {
-    path: '/counter',
-    element: <Counter />
-  },
 
-  {
-    path: '/weather',
-    element: <ProtectedRoute><Weather /></ProtectedRoute>
-  },
 
-  {
-    path: '/todo',
-    element: <ProtectedRoute><Tasks /></ProtectedRoute>
-  },
+
 
   { path: '/cari', 
     element: <CariSekolahPage /> 

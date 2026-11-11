@@ -1,0 +1,7 @@
+# Local-only scaffold, not part of the OpenSch project
+OpenSch.Api/
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+desktop.ini

@@ -11,9 +11,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
-    public DbSet<TodoList> TodoLists => Set<TodoList>();
-
-    public DbSet<TodoItem> TodoItems => Set<TodoItem>();
+    public DbSet<Sekolah> Sekolah => Set<Sekolah>();
+    public DbSet<Perbandingan> Perbandingan => Set<Perbandingan>();
+    public DbSet<DetailPerbandingan> DetailPerbandingan => Set<DetailPerbandingan>();
+    public DbSet<ImporData> ImporData => Set<ImporData>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

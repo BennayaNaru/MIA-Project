@@ -26,7 +26,7 @@ Aplikasi web yang membantu orang tua mencari sekolah dan membandingkan 2–3 sek
 2. Jalankan **frontend** (cukup langkah ini untuk melihat seluruh tampilan saat ini):
 
    ```bash
-   cd src/Web/ClientApp
+   cd OpenSch/src/Web/ClientApp
    npm install
    npm run dev
    ```
@@ -40,10 +40,26 @@ Aplikasi web yang membantu orang tua mencari sekolah dan membandingkan 2–3 sek
 - [x] Keranjang perbandingan dan halaman Bandingkan
 - [x] Tentang Data (metodologi dan batasan data)
 - [x] Halaman Masuk/Daftar
-- [ ] Integrasi frontend dengan API backend (`/api/schools`, `/api/compare`, `/api/rankings`)
+- [x] API katalog dan perbandingan sekolah (`/api/schools`, `/api/compare`)
+- [x] Ringkasan perbandingan AI di `POST /api/compare/ai` dengan payload JSON terstruktur dan fallback deterministik
 - [ ] Halaman Peringkat dan ringkasan otomatis dari backend
 
-Catatan: saat ini halaman frontend memakai data sintetis yang disimpan di `src/Web/ClientApp/src/data/schools.js`.
+Catatan: seluruh data adalah sintetis. Untuk perbandingan AI, browser hanya mengirim ID sekolah; server mengambil metrik kanonis,
+membentuk JSON, dan mengirimkannya ke penyedia AI yang dikonfigurasi. Respons AI selalu harus diperlakukan sebagai bantuan,
+bukan fakta atau rekomendasi akhir.
+
+## Konfigurasi AI (opsional)
+
+Secara default, endpoint AI menggunakan fallback deterministik dan tidak menghubungi penyedia eksternal. Untuk mengaktifkan
+penyedia dengan API yang kompatibel dengan Chat Completions, simpan rahasia di user-secrets atau environment variables - jangan
+menuliskan kunci di `appsettings.json`:
+
+```powershell
+dotnet user-secrets set "AiComparison:Enabled" "true" --project OpenSch/src/Web/Web.csproj
+dotnet user-secrets set "AiComparison:Endpoint" "https://your-provider.example/v1/chat/completions" --project OpenSch/src/Web/Web.csproj
+dotnet user-secrets set "AiComparison:Model" "your-model" --project OpenSch/src/Web/Web.csproj
+dotnet user-secrets set "AiComparison:ApiKey" "your-secret" --project OpenSch/src/Web/Web.csproj
+```
 
 ## Tim
 

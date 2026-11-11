@@ -36,9 +36,9 @@ public class FunctionalTestSetup
             .WaitAsync(cancellationToken);
 
         await _app.ResourceNotifications.WaitForResourceHealthyAsync(
-            Services.Database, cancellationToken);
+            OpenSch.Shared.Services.Database, cancellationToken);
 
-        var connectionString = (await _app.GetConnectionStringAsync(Services.Database))!;
+        var connectionString = (await _app.GetConnectionStringAsync(OpenSch.Shared.Services.Database))!;
 
         _factory = new WebApiFactory(connectionString);
         ScopeFactory = _factory.Services.GetRequiredService<IServiceScopeFactory>();

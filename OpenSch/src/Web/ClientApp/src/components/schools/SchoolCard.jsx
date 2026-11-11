@@ -1,5 +1,4 @@
 import Icon from '../common/Icon'
-import { BENCHMARK } from '../../data/schools'
 
 function Metric({ icon, label, value, text, bar }) {
   return (
@@ -19,8 +18,8 @@ function Metric({ icon, label, value, text, bar }) {
   )
 }
 
-export default function SchoolCard({ school: s, selected, onToggle, onDetail }) {
-  const delta = Number((s.composite - BENCHMARK).toFixed(1))
+export default function SchoolCard({ school: s, selected, onToggle, onDetail, benchmark = 0 }) {
+  const delta = Number((s.composite - benchmark).toFixed(1))
 
   return (
     <div

@@ -1,18 +1,10 @@
 import { useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { AUTH } from "../constants/auth";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useAuth } from "../components/api-authorization/AuthContext";
 import AuthShowcase from "../components/auth/AuthShowcase";
 import AuthField from "../components/auth/AuthField";
 import Icon from "../components/common/Icon";
 
-const wait = (ms) => new Promise((r) => setTimeout(r, ms));
-
-// TODO: ganti dengan pemanggilan AuthContext (login / register) saat backend siap.
-// Sekarang hanya simulasi: selalu berhasil setelah 600 ms.
-async function submitAuth(mode, values) {
-  await wait(600);
-  return { ok: true };
-}
 
 const tabClass = (active) =>
   "flex-1 py-2.5 px-4 rounded-lg text-sm text-center transition-all " +
@@ -23,11 +15,13 @@ const tabClass = (active) =>
 export default function LoginPage() {
   const [params, setParams] = useSearchParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const mode = params.get("mode") === "daftar" ? "daftar" : "masuk";
 
   const [form, setForm] = useState({ nama: "", email: "", password: "", konfirmasi: "", ingat: true, setuju: false });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const { login, register } = useAuth();
 
   const set = (key) => (e) =>
     setForm((f) => ({ ...f, [key]: e.target.type === "checkbox" ? e.target.checked : e.target.value }));
@@ -46,9 +40,11 @@ export default function LoginPage() {
     }
     setLoading(true);
     try {
-      const res = await submitAuth(mode, form);
-      if (!res.ok) throw new Error(res.message);
-      navigate("/");
+      if (mode === "daftar") {
+        await register(form.email, form.password);
+      }
+      await login(form.email, form.password, form.ingat);
+      navigate(location.state?.returnUrl || "/", { replace: true });
     } catch (err) {
       setError(err.message || "Gagal memproses permintaan. Coba lagi.");
     } finally {
@@ -90,26 +86,7 @@ export default function LoginPage() {
               : "Daftar untuk menyimpan pilihan perbandingan dan memakai ringkasan AI."}
           </p>
 
-          {mode === "masuk" && (
-            <div className="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/60 mb-5">
-              <p className="flex items-center gap-1 text-xs font-semibold text-primary mb-2">
-                <Icon name="info" className="text-[16px] text-secondary" /> Akun demo: klik untuk mengisi otomatis
-              </p>
-              <div className="flex gap-2">
-                {AUTH.demoAccounts.map((a) => (
-                  <button
-                    key={a.email}
-                    type="button"
-                    onClick={() => setForm((f) => ({ ...f, email: a.email, password: a.password }))}
-                    className="flex-1 py-1.5 px-2.5 rounded-lg border border-outline-variant bg-white hover:border-secondary text-left text-xs transition-colors"
-                  >
-                    <span className="font-semibold block text-secondary">{a.label}</span>
-                    <span className="truncate block text-on-surface-variant">{a.email}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
+
 
           <form onSubmit={onSubmit} className="space-y-4">
             {mode === "daftar" && (
